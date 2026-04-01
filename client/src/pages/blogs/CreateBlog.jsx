@@ -13,7 +13,7 @@ const CreateBlog = () => {
   const [createBlog, { data, isLoading }] = useCreateBlogMutation();
   const [inputField, setInputField] = useState({ ...INITIAL_VALUE });
   const [slug, setSlug] = useState("");
-  const [image, setImg] = useState("");
+  const [image, setImg] = useState(null);
   const [thumbnail, setThumbnail] = useState("");
   const currentImg = useRef();
   if (isLoading) return <Loading />;

@@ -1,8 +1,8 @@
 const StatsCard = ({ title, value }) => {
   return (
-    <div className="bg-white shadow rounded-xl p-6">
+    <div className="bg-white hover:bg-indigo-300 hover:text-white text-gray-500  shadow rounded-xl p-6">
 
-      <p className="text-gray-500 text-sm">
+      <p className="text-sm">
         {title}
       </p>
 

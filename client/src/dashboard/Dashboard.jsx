@@ -1,13 +1,14 @@
-import React from 'react'
+import React, { useState } from 'react'
 import StatsCard from './components/StatsCard'
-import { useGetBlogListsQuery } from '../services/api/api'
+import { useGetBlogListsQuery, useGetCommentListsQuery } from '../services/api/api'
 import Loading from '../components/ui/Loading'
 import { Link } from 'react-router'
 
 const Dashboard = () => {
-  const {data,isError,isLoading}=useGetBlogListsQuery()
+  const [page, setPage] = useState(1);
+  const {data,isLoading} = useGetBlogListsQuery({page,limit:10})
+  const {data:comments} = useGetCommentListsQuery()
   if(isLoading) return <Loading/>
-  console.log(data.data.data[0]._id)
   return (
     <>
       <div className="space-y-6 sm:space-y-8">
@@ -53,11 +54,10 @@ const Dashboard = () => {
     <Link to="comments">
       <StatsCard
         title="Comments"
-        value="340"
+        value={comments?.data?.data.length}
       />
     </Link>
 
-    <StatsCard title="Views" value="12.4K" />
 
   </div>
 

@@ -60,7 +60,7 @@ const updateBlogController = async(req,res)=>{
         const thumbnailImg = await uploadImage('Blog-image',bufferImg)
         if(thumbnailImg) existBlog.thumbnail = thumbnailImg
         await existBlog.save()
-        return responseHeader.success(res,'success',200)
+        return responseHeader.success(res,'Blog updated successfully',200)
     } catch (e) {
         console.log(e)
         return responseHeader.error(res)

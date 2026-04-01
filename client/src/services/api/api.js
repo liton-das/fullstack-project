@@ -70,25 +70,32 @@ export const blogApi = createApi({
     }),
     // get blog lists
     getBlogLists: build.query({
-      query: ({page=1,limit=10}) => `blog/v1/get-blog-lists?page=${page}&limit=${limit}`,
+      query: ({ page = 1, limit = 10 }) => `blog/v1/get-blog-lists?page=${page}&limit=${limit}`,
     }),
-    // create new Blog 
-    createBlog:build.mutation({
-      query:(data)=>({
+    // create new Blog
+    createBlog: build.mutation({
+      query: (data) => ({
         url: `blog/v1/create-blog`,
-        method:"POST",
-        body:data
-      })
+        method: "POST",
+        body: data,
+      }),
+    }),
+    // update blog
+    updateBlog: build.mutation({
+      query: ({ id, data }) => ({
+        url: `blog/v1/update-blog/${id}`,
+        method: "PUT",
+        body: data,
+      }),
     }),
     // get blog by slug
-    getReadBlog:build.query({
-        query:(slug)=>`blog/v1/read/${slug}`
+    getReadBlog: build.query({
+      query: (slug) => `blog/v1/read/${slug}`,
     }),
     // get comment lists
     getCommentLists: build.query({
       query: () => `blog/v1/get-all-comments`,
     }),
-    
   }),
 });
 
@@ -101,6 +108,7 @@ export const {
   useGetUserListsQuery,
   useGetBlogListsQuery,
   useCreateBlogMutation,
+  useUpdateBlogMutation,
   useGetCommentListsQuery,
   useGetReadBlogQuery,
   useLogOutMutation
