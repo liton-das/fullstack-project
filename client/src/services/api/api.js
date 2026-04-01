@@ -70,7 +70,7 @@ export const blogApi = createApi({
     }),
     // get blog lists
     getBlogLists: build.query({
-      query: () => "blog/v1/get-blog-lists",
+      query: ({page=1,limit=10}) => `blog/v1/get-blog-lists?page=${page}&limit=${limit}`,
     }),
     // create new Blog 
     createBlog:build.mutation({

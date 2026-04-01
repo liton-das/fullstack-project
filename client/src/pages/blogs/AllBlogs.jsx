@@ -1,14 +1,15 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Link, useSearchParams } from 'react-router';
 import { useGetBlogListsQuery } from '../../services/api/api';
 import Loading from '../../components/ui/Loading';
 import moment from 'moment'
 const AllBlogs = () => {
     const [searchParams, setSearchParams] = useSearchParams();
+    const [page, setPage] = useState(1);
     console.log(searchParams)
-    const {data,isLoading} = useGetBlogListsQuery()
+    const {data,isLoading} = useGetBlogListsQuery({page,limit:10})
     if(isLoading) return <Loading/>
-    console.log(data.data.data)
+    console.log(data?.data?.pagination)
     let i=1
   return (
     <div>
@@ -126,26 +127,48 @@ const AllBlogs = () => {
       <div className="flex justify-between items-center pt-4">
 
         <p className="text-sm text-gray-500">
-          Showing 1–10 of 50 blogs
+          Showing {data?.data?.pagination?.page}–{data?.data?.pagination?.limit} of {data?.data?.pagination?.totalItems} blogs
         </p>
 
-        <div className="flex gap-2">
-          <button className="px-3 py-1 border rounded-lg">
-            Prev
-          </button>
+        <div className="flex gap-2 flex-wrap">
 
-          <button className="px-3 py-1 bg-blue-600 text-white rounded-lg">
-            1
-          </button>
+  {/* Prev */}
+  <button
+    onClick={() => setPage((prev) => prev - 1)}
+    disabled={page === 1}
+    className="px-3 py-1 border rounded-lg disabled:opacity-50"
+  >
+    Prev
+  </button>
 
-          <button className="px-3 py-1 border rounded-lg">
-            2
-          </button>
+  {/* Page Numbers */}
+  {Array.from(
+    { length: data?.data?.pagination?.totalPages || 1 },
+    (_, i) => i + 1
+  ).map((p) => (
+    <button
+      key={p}
+      onClick={() => setPage(p)}
+      className={`px-3 py-1 rounded-lg border ${
+        page === p
+          ? "bg-blue-600 text-white"
+          : "hover:bg-gray-100"
+      }`}
+    >
+      {p}
+    </button>
+  ))}
 
-          <button className="px-3 py-1 border rounded-lg">
-            Next
-          </button>
-        </div>
+  {/* Next */}
+  <button
+    onClick={() => setPage((prev) => prev + 1)}
+    disabled={page === data?.data?.pagination?.totalPages}
+    className="px-3 py-1 border rounded-lg disabled:opacity-50"
+  >
+    Next
+  </button>
+
+</div>
 
       </div>
 
