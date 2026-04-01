@@ -29,6 +29,7 @@ const handleChange=(e)=>{
         .replace(/(^-|-$)+/g, ""),
     );
 }
+console.log(inputField)
 // handle image upload 
 const handleImgUplod = (e)=>{
     const file = e.target.files[0]
@@ -45,13 +46,15 @@ const handleSubmit =async(e)=>{
   formData.append("title", inputField.title);
   formData.append("content", inputField.content);
   formData.append("tags", inputField.tags);
-  formData.append("isActive", inputField.isActive);
+  formData.append("isActive", inputField.isActive=='draft'?false:true );
   formData.append("slug", slug);
   formData.append("thumbnail", thumbnail);
 
   try {
     const res = await createBlog(formData).unwrap();
-    console.log(res);
+    console.log(res?.data?.message);
+    setInputField(INITIAL_VALUE)
+
   } catch (e) {
     console.log(e);
   }
@@ -108,7 +111,7 @@ const handleSubmit =async(e)=>{
           <label className="block mb-2 font-medium">
             Cover Image
           </label>
-          <div onClick={()=>currentImg.current.click()} className="border-2 border-dashed cursor-pointer p-6 rounded-lg w-full h-87.5 text-gray-500 text-center flex justify-center items-center">
+          <div onClick={()=>currentImg.current.click()} className="border-2 overflow-hidden border-dashed cursor-pointer p-6 rounded-lg w-full h-87.5 text-gray-500 text-center flex justify-center items-center">
             <img className=' text-center' src={image} alt="image" />
             <input ref={currentImg} type="file" hidden onChange={handleImgUplod} />
           </div>
@@ -150,8 +153,8 @@ const handleSubmit =async(e)=>{
             Status
           </label>
           <select onChange={handleChange} name='isActive' className="w-full border px-4 py-2 rounded-lg">
-            <option value={inputField.isActive}>Draft</option>
-            <option value={inputField.isActive}>Published</option>
+            <option value={inputField.isActive==true?true:false}>Draft</option>
+            <option value={inputField.isActive==false?false:true}>Published</option>
           </select>
         </div>
 
