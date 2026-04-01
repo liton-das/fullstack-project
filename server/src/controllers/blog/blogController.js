@@ -147,7 +147,7 @@ const deleteSingleBlogController = async(req,res)=>{
             await cloudinary.uploader.destroy(`BlogForge/${existThumbnail}`)
         }
         await Blogs.findOneAndDelete({_id:id})
-        return responseHeader.success(res)
+        return responseHeader.success(res,'Blog deleted successfully',200)
     } catch (e) {
         return responseHeader.error(res)
     }

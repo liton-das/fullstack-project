@@ -1,7 +1,7 @@
 import React from 'react'
 import { Navigate, Outlet } from 'react-router'
 import Sidebar from '../dashboard/Sidebar'
-import Navbar from '../dashboard/Navbar'
+import Navbar from '../dashboard/components/Navbar'
 import { useGetProfileQuery } from '../services/api/api'
 import Loading from '../components/ui/Loading'
 

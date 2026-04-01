@@ -3,7 +3,7 @@ import { createBrowserRouter, createRoutesFromElements, Route, RouterProvider } 
 import Layoutes from './Layoutes/Layoutes'
 import Login from './pages/auth/Login'
 import Register from './pages/auth/Register'
-import Home from './pages/blogs/Home'
+import Home from './pages/public/Home'
 import DashBoardLayoute from './Layoutes/DashBoardLayoute'
 import Dashboard from './dashboard/Dashboard'
 import { ToastContainer } from 'react-toastify';

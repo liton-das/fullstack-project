@@ -1,5 +1,5 @@
-import Loading from "../components/ui/Loading";
-import { useGetProfileQuery } from "../services/api/api";
+import Loading from "../../components/ui/Loading";
+import { useGetProfileQuery } from "../../services/api/api";
 
 const Navbar = () => {
   const {data:profileData,isError,isLoading} = useGetProfileQuery()

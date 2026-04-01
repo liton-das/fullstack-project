@@ -6,7 +6,7 @@ const Sidebar = () => {
     { name: "All Blogs", path: "all-blogs" },
     { name: "Create Post", path: "/dashboard/create-blog" },
     { name: "Comments", path: "comments" },
-    { name: "Users", path: "users" }
+    { name: "Users", path: "users" },
   ];
  
   return (

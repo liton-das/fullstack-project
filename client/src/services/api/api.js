@@ -19,6 +19,7 @@ const ReAuth = async (arg, api, extraOptions) => {
 export const blogApi = createApi({
   reducerPath: "api",
   baseQuery: ReAuth,
+  tagTypes: ["Blog"],
   endpoints: (build) => ({
     // Register api
     register: build.mutation({
@@ -63,14 +64,21 @@ export const blogApi = createApi({
     // get user profile api
     getProfile: build.query({
       query: () => `auth/v1/get-profile`,
+      providesTags: ["Blog"],
     }),
     // get user lists
     getUserLists: build.query({
       query: () => "auth/v1/get-user-lists",
+      providesTags: ["Blog"],
     }),
     // get blog lists
     getBlogLists: build.query({
       query: ({ page = 1, limit = 10 }) => `blog/v1/get-blog-lists?page=${page}&limit=${limit}`,
+      providesTags: ["Blog"],
+    }),
+    // get search blog items
+    getSearchItems: build.query({
+      query: (search) => `/v1/search-tarms/${search}`,
     }),
     // create new Blog
     createBlog: build.mutation({
@@ -91,10 +99,20 @@ export const blogApi = createApi({
     // get blog by slug
     getReadBlog: build.query({
       query: (slug) => `blog/v1/read/${slug}`,
+      providesTags: ["Blog"],
     }),
     // get comment lists
     getCommentLists: build.query({
       query: () => `blog/v1/get-all-comments`,
+      providesTags: ["Blog"],
+    }),
+    // delete single blog
+    deleteSingleBlog: build.mutation({
+      query: (id) => ({
+        url: `blog/v1/delete-blog/${id}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: ["Blogs"],
     }),
   }),
 });
@@ -107,9 +125,11 @@ export const {
   useGetProfileQuery,
   useGetUserListsQuery,
   useGetBlogListsQuery,
+  useGetSearchItemsQuery,
   useCreateBlogMutation,
   useUpdateBlogMutation,
   useGetCommentListsQuery,
+  useDeleteSingleBlogMutation,
   useGetReadBlogQuery,
   useLogOutMutation
 } = blogApi;
