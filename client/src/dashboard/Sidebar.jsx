@@ -4,10 +4,9 @@ const Sidebar = () => {
   const menus = [
     { name: "Dashboard", path: "/dashboard" },
     { name: "All Blogs", path: "all-blogs" },
-    { name: "Create Post", path: "/create-post" },
+    { name: "Create Post", path: "/dashboard/create-blog" },
     { name: "Comments", path: "comments" },
-    { name: "Users", path: "users" },
-    { name: "Settings", path: "/settings" },
+    { name: "Users", path: "users" }
   ];
  
   return (

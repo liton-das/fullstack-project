@@ -14,10 +14,6 @@ const AllComments = () => {
         {/* Header */}
         <div className="flex justify-between items-center">
           <h1 className="text-2xl font-bold">All Comments</h1>
-
-          <button className="bg-blue-600 text-white px-5 py-2 rounded-xl hover:bg-blue-700">
-            Manage Settings
-          </button>
         </div>
 
         {/* Filters */}
