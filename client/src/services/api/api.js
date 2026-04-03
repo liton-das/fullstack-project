@@ -78,7 +78,7 @@ export const blogApi = createApi({
     }),
     // get search blog items
     getSearchItems: build.query({
-      query: (search) => `/v1/search-tarms/${search}`,
+      query: (searchItems) => `/v1/search-tarms/${searchItems}`,
     }),
     // create new Blog
     createBlog: build.mutation({

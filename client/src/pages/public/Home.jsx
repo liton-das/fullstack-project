@@ -1,102 +1,171 @@
-import React from "react";
-
-const blogs = [
-  {
-    id: 1,
-    title: "Mastering MERN Stack in 2026",
-    desc: "Learn how to build scalable apps using MERN stack.",
-    image: "https://source.unsplash.com/random/800x600?coding",
-    category: "Development",
-    author: "John Doe",
-  },
-  {
-    id: 2,
-    title: "AI in Modern Web Development",
-    desc: "Explore how AI is transforming frontend and backend.",
-    image: "https://source.unsplash.com/random/800x600?ai",
-    category: "AI",
-    author: "Jane Smith",
-  },
-  {
-    id: 3,
-    title: "Design Systems for SaaS Apps",
-    desc: "Build consistent UI using design systems.",
-    image: "https://source.unsplash.com/random/800x600?design",
-    category: "Design",
-    author: "Alex Ray",
-  },
-];
+import React, { useState } from "react";
+import { useGetBlogListsQuery } from "../../services/api/api";
+import { Link } from "react-router";
 
 const Home = () => {
+  const [page, setPage] = useState(1);
+
+  // 🆕 comment state (store per blogId)
+  const [comments, setComments] = useState({});
+  const [commentInput, setCommentInput] = useState({});
+
+  const { data, isLoading, isError } = useGetBlogListsQuery({
+    page,
+    limit: 6,
+  });
+
+  const blogs = data?.data?.data || [];
+
+  // 🆕 handle comment submit
+  const handleCommentSubmit = (blogId) => {
+    if (!commentInput[blogId]) return;
+
+    setComments((prev) => ({
+      ...prev,
+      [blogId]: [...(prev[blogId] || []), commentInput[blogId]],
+    }));
+
+    // clear input
+    setCommentInput((prev) => ({
+      ...prev,
+      [blogId]: "",
+    }));
+  };
+
   return (
     <div className="bg-gray-50 min-h-screen">
 
-      {/* ================= HERO ================= */}
-      <section className="max-w-7xl mx-auto px-6 py-12 text-center">
-        <h2 className="text-4xl font-bold mb-4">
-          Discover Amazing Blogs 🚀
-        </h2>
-        <p className="text-gray-600 max-w-xl mx-auto">
-          Explore articles on development, AI, and modern technologies.
+      {/* HERO */}
+      <section className="max-w-7xl mx-auto px-6 py-10 text-center">
+        <h2 className="text-3xl font-bold">Latest Blogs 🚀</h2>
+        <p className="text-gray-500 mt-2">
+          Explore modern articles and insights
         </p>
       </section>
 
-      {/* ================= SEARCH ================= */}
-      <div className="max-w-7xl mx-auto px-6 mb-8 flex justify-center">
-        <input
-          type="text"
-          placeholder="Search blogs..."
-          className="w-full md:w-96 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
-      </div>
+      {/* LOADING */}
+      {isLoading && (
+        <div className="text-center py-10">Loading blogs...</div>
+      )}
 
-      {/* ================= BLOG GRID ================= */}
-      <section className="max-w-7xl mx-auto px-6 pb-12">
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      {/* ERROR */}
+      {isError && (
+        <div className="text-center text-red-500 py-10">
+          Failed to load blogs
+        </div>
+      )}
 
-          {blogs.map((blog) => (
-            <div
-              key={blog.id}
-              className="bg-white rounded-xl shadow hover:shadow-lg transition overflow-hidden"
-            >
-              {/* Image */}
-              <img
-                src={blog.image}
-                alt=""
-                className="w-full h-48 object-cover"
-              />
+      {/* BLOG GRID */}
+      {!isLoading && !isError && (
+        <section className="max-w-7xl mx-auto px-6 pb-12">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
 
-              {/* Content */}
-              <div className="p-5 space-y-3">
-                <span className="text-xs bg-blue-100 text-blue-600 px-3 py-1 rounded-full">
-                  {blog.category}
-                </span>
+            {blogs.map((blog) => (
+              <div
+                key={blog._id}
+                className="bg-white rounded-xl shadow hover:shadow-lg transition overflow-hidden"
+              >
+                {/* IMAGE */}
+                <img
+                  src={blog.thumbnail || "https://via.placeholder.com/400"}
+                  alt={blog.title}
+                  className="w-full h-48 object-cover"
+                />
 
-                <h3 className="text-lg font-semibold">
-                  {blog.title}
-                </h3>
+                {/* CONTENT */}
+                <div className="p-5 space-y-3">
+                  <span className="text-xs bg-blue-100 text-blue-600 px-3 py-1 rounded-full">
+                    {blog.category || "General"}
+                  </span>
 
-                <p className="text-sm text-gray-500">
-                  {blog.desc}
-                </p>
+                  <h3 className="text-lg font-semibold">
+                    {blog.title}
+                  </h3>
 
-                <div className="flex justify-between items-center text-sm text-gray-400">
-                  <span>{blog.author}</span>
-                  <button className="text-blue-600 hover:underline">
-                    Read More →
-                  </button>
+                  <p className="text-sm text-gray-500 line-clamp-2">
+                    {blog.content}
+                  </p>
+
+                  <div className="flex justify-between items-center text-sm text-gray-400">
+                    <span>{blog.author?.fullName || "Unknown"}</span>
+
+                    <Link to={`/blog-details/${blog?.slug}`} className="text-blue-600 hover:underline">
+                      Read More →
+                    </Link>
+                  </div>
+
+                  {/* ================= COMMENTS SECTION ================= */}
+                  <div className="pt-3 border-t mt-3 space-y-2">
+
+                    <h4 className="text-sm font-semibold">Comments</h4>
+
+                    {/* COMMENT LIST */}
+                    <div className="space-y-1 max-h-24 overflow-y-auto">
+                      {(comments[blog._id] || []).map((c, index) => (
+                        <p
+                          key={index}
+                          className="text-xs bg-gray-100 px-2 py-1 rounded"
+                        >
+                          {c}
+                        </p>
+                      ))}
+                    </div>
+
+                    {/* INPUT */}
+                    <div className="flex gap-2">
+                      <input
+                        type="text"
+                        placeholder="Write a comment..."
+                        value={commentInput[blog._id] || ""}
+                        onChange={(e) =>
+                          setCommentInput((prev) => ({
+                            ...prev,
+                            [blog._id]: e.target.value,
+                          }))
+                        }
+                        className="flex-1 border px-2 py-1 rounded text-sm"
+                      />
+
+                      <button
+                        onClick={() => handleCommentSubmit(blog._id)}
+                        className="bg-blue-600 text-white px-3 py-1 rounded text-sm"
+                      >
+                        Post
+                      </button>
+                    </div>
+
+                  </div>
+                  {/* ================= END COMMENTS ================= */}
+
                 </div>
               </div>
-            </div>
-          ))}
+            ))}
 
-        </div>
-      </section>
+          </div>
+        </section>
+      )}
 
-      {/* ================= FOOTER ================= */}
-      <footer className="bg-white border-t py-6 text-center text-sm text-gray-500">
-        © 2026 BlogForge. All rights reserved.
-      </footer>
+      {/* PAGINATION */}
+      <div className="flex justify-center gap-2 pb-10">
+        <button
+          onClick={() => setPage((prev) => prev - 1)}
+          disabled={page === 1}
+          className="px-3 py-1 border rounded-lg disabled:opacity-50"
+        >
+          Prev
+        </button>
+
+        <span className="px-3 py-1 bg-blue-600 text-white rounded-lg">
+          {page}
+        </span>
+
+        <button
+          onClick={() => setPage((prev) => prev + 1)}
+          className="px-3 py-1 border rounded-lg"
+        >
+          Next
+        </button>
+      </div>
 
     </div>
   );

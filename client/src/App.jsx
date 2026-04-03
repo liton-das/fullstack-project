@@ -14,6 +14,9 @@ import Users from './pages/blogs/Users'
 import AllComments from './pages/blogs/AllComments'
 import ReadBlog from './pages/blogs/ReadBlog'
 import CreateBlog from './pages/blogs/CreateBlog'
+import BlogDetails from './pages/BlogDetails'
+import Blogs from './pages/public/Blogs'
+import About from './pages/public/About'
 const App = () => {
   const router = createBrowserRouter(createRoutesFromElements(
     <Route>
@@ -21,6 +24,9 @@ const App = () => {
         {/* Public route */}
         <Route path='/' element={<Layoutes/>}>
           <Route index element={<Home/>}/>
+          <Route path='/blog-details/:slug' element={<BlogDetails/>}/>
+          <Route path='/blogs' element={<Blogs/>}/>
+          <Route path='/about' element={<About/>}/>
         </Route>
         {/* Dashboard route */}
         <Route path='/dashboard' element={<DashBoardLayoute/>}>

@@ -13,7 +13,6 @@ const Navbar = () => {
   const [open, setOpen] = useState(false);
   const {data,isLoading} = useGetProfileQuery()
   if(isLoading) return <Loading/>
-  console.log(data)
   
   return (
     <nav className="bg-white shadow-sm sticky top-0 z-50">
@@ -24,9 +23,9 @@ const Navbar = () => {
 
         {/* MENU */}
         <div className="hidden md:flex gap-6 text-sm">
-          <a href="#">Home</a>
-          <a href="#">Blogs</a>
-          <a href="#">About</a>
+          <a href="/">Home</a>
+          <a href="/blogs">Blogs</a>
+          <a href="/about">About</a>
         </div>
 
         {/* RIGHT SIDE */}

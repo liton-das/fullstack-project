@@ -95,7 +95,7 @@ const getBlogBySlug = async(req,res)=>{
     try {
         const {slug}=req.params
         if(!slug) return responseHeader.error(res,'Blog not found!',404)
-        const blog = await Blogs.findOne({slug}).populate('author comments','fullName role comment_body').select('-isActive -__v')
+        const blog = await Blogs.findOne({slug}).populate('author comments','fullName role avatar comment_body').select('-isActive -__v')
         if(!blog) return responseHeader.error(res,'This blog not exist!',404)
         return responseHeader.success(res,'success',200,blog)
 
