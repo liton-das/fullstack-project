@@ -17,6 +17,7 @@ import CreateBlog from './pages/blogs/CreateBlog'
 import BlogDetails from './pages/BlogDetails'
 import Blogs from './pages/public/Blogs'
 import About from './pages/public/About'
+import SearchItem from './pages/SearchItem'
 const App = () => {
   const router = createBrowserRouter(createRoutesFromElements(
     <Route>
@@ -27,6 +28,7 @@ const App = () => {
           <Route path='/blog-details/:slug' element={<BlogDetails/>}/>
           <Route path='/blogs' element={<Blogs/>}/>
           <Route path='/about' element={<About/>}/>
+          <Route path='/search/:id' element={<SearchItem/>}/>
         </Route>
         {/* Dashboard route */}
         <Route path='/dashboard' element={<DashBoardLayoute/>}>

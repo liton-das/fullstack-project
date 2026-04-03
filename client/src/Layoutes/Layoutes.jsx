@@ -4,6 +4,7 @@ import Navbar from '../components/Navbar'
 import Footer from '../pages/Footer'
 
 const Layoutes = () => {
+  
   return (
     <>
         <Navbar/>
