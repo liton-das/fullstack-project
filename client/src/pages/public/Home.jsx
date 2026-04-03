@@ -1,37 +1,41 @@
 import React, { useState } from "react";
-import { useGetBlogListsQuery } from "../../services/api/api";
+import { useCreateCommentMutation, useGetBlogListsQuery } from "../../services/api/api";
 import { Link } from "react-router";
-
+import { FaComment } from "react-icons/fa";
 const Home = () => {
   const [page, setPage] = useState(1);
-
   // 🆕 comment state (store per blogId)
   const [comments, setComments] = useState({});
   const [commentInput, setCommentInput] = useState({});
-
+  const [isComment,setIsComment] = useState(null);
   const { data, isLoading, isError } = useGetBlogListsQuery({
     page,
     limit: 6,
   });
 
   const blogs = data?.data?.data || [];
-
+  const [createComment ] = useCreateCommentMutation();
   // 🆕 handle comment submit
-  const handleCommentSubmit = (blogId) => {
-    if (!commentInput[blogId]) return;
-
-    setComments((prev) => ({
-      ...prev,
-      [blogId]: [...(prev[blogId] || []), commentInput[blogId]],
-    }));
-
-    // clear input
-    setCommentInput((prev) => ({
-      ...prev,
-      [blogId]: "",
-    }));
+  const handleCommentSubmit = async (blogId) => {
+    const text = commentInput[blogId];
+    if (!text?.trim()) return;
+    try {
+      await createComment({ blogId, comment_body: text  }).unwrap();
+      // Update local state to show new comment immediately
+      setComments((prev) => ({
+        ...prev,
+        [blogId]: [...(prev[blogId] || []), text],
+      }));
+    } catch (error) {
+      console.error("Failed to post comment", error);
+    }
   };
 
+
+  const handleCommentToggle = (blogId) => {  
+    const current = isComment === blogId ? false : blogId; // toggle logic
+    setIsComment(current);  
+  }
   return (
     <div className="bg-gray-50 min-h-screen">
 
@@ -96,23 +100,16 @@ const Home = () => {
 
                   {/* ================= COMMENTS SECTION ================= */}
                   <div className="pt-3 border-t mt-3 space-y-2">
-
-                    <h4 className="text-sm font-semibold">Comments</h4>
-
-                    {/* COMMENT LIST */}
-                    <div className="space-y-1 max-h-24 overflow-y-auto">
-                      {(comments[blog._id] || []).map((c, index) => (
-                        <p
-                          key={index}
-                          className="text-xs bg-gray-100 px-2 py-1 rounded"
-                        >
-                          {c}
-                        </p>
-                      ))}
-                    </div>
-
-                    {/* INPUT */}
-                    <div className="flex gap-2">
+                    <div onClick={() => handleCommentToggle(blog._id)} className="flex items-center gap-2 text-blue-600 hover:underline">
+                      <h4 className="text-sm font-semibold ">Comments</h4>
+                      <FaComment/>
+                    </div> 
+                  {
+                    isComment === blog._id &&
+                    <form onSubmit={(e) => {
+                      e.preventDefault();
+                      handleCommentSubmit(blog._id);
+                    }} className="flex gap-2">
                       <input
                         type="text"
                         placeholder="Write a comment..."
@@ -127,12 +124,29 @@ const Home = () => {
                       />
 
                       <button
-                        onClick={() => handleCommentSubmit(blog._id)}
+                        type="submit"
                         className="bg-blue-600 text-white px-3 py-1 rounded text-sm"
                       >
                         Post
                       </button>
+                    </form>
+
+                  }
+                    
+
+                    {/* COMMENT LIST */}
+                    <div className="space-y-1 max-h-24 overflow-y-auto">
+                      {(comments[blog._id] || []).map((c, index) => (
+                        <p
+                          key={index}
+                          className="text-xs bg-gray-100 px-2 py-1 rounded"
+                        >
+                          {c}
+                        </p>
+                      ))}
                     </div>
+
+                    
 
                   </div>
                   {/* ================= END COMMENTS ================= */}

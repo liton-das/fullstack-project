@@ -102,6 +102,14 @@ export const blogApi = createApi({
       query: (slug) => `blog/v1/read/${slug}`,
       providesTags: ["Blog"],
     }),
+    createComment: build.mutation({
+      query: ({ id, data }) => ({
+        url: `blog/v1/create-comment/${id}`,
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: ["Blog"],
+    }),
     // get comment lists
     getCommentLists: build.query({
       query: () => `blog/v1/get-all-comments`,
@@ -129,6 +137,7 @@ export const {
   useGetSearchItemsQuery,
   useCreateBlogMutation,
   useUpdateBlogMutation,
+  useCreateCommentMutation,
   useGetCommentListsQuery,
   useDeleteSingleBlogMutation,
   useGetReadBlogQuery,
