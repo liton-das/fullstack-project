@@ -103,7 +103,7 @@ export const blogApi = createApi({
       providesTags: ["Blog"],
     }),
     createComment: build.mutation({
-      query: ({ id, data }) => ({
+      query: ({ id, ...data }) => ({
         url: `blog/v1/create-comment/${id}`,
         method: "POST",
         body: data,

@@ -20,7 +20,7 @@ const Home = () => {
     const text = commentInput[blogId];
     if (!text?.trim()) return;
     try {
-      await createComment({ blogId, comment_body: text  }).unwrap();
+      await createComment({ id:blogId, commentBody: text  }).unwrap();
       // Update local state to show new comment immediately
       setComments((prev) => ({
         ...prev,
@@ -31,6 +31,7 @@ const Home = () => {
     }
   };
 
+  
 
   const handleCommentToggle = (blogId) => {  
     const current = isComment === blogId ? false : blogId; // toggle logic
