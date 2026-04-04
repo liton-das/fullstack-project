@@ -2,9 +2,10 @@ import React, { useState } from "react";
 import { useCreateCommentMutation, useGetBlogListsQuery } from "../../services/api/api";
 import { Link } from "react-router";
 import { FaComment } from "react-icons/fa";
+import showMsg from "../../utils/getMessage";
 const Home = () => {
   const [page, setPage] = useState(1);
-  // 🆕 comment state (store per blogId)
+  // comment state (store per blogId)
   const [comments, setComments] = useState({});
   const [commentInput, setCommentInput] = useState({});
   const [isComment,setIsComment] = useState(null);
@@ -12,22 +13,26 @@ const Home = () => {
     page,
     limit: 6,
   });
-
   const blogs = data?.data?.data || [];
   const [createComment ] = useCreateCommentMutation();
-  // 🆕 handle comment submit
+  
+  // handle comment submit
   const handleCommentSubmit = async (blogId) => {
     const text = commentInput[blogId];
     if (!text?.trim()) return;
     try {
-      await createComment({ id:blogId, commentBody: text  }).unwrap();
+      const res = await createComment({ id:blogId, commentBody: text  }).unwrap();
       // Update local state to show new comment immediately
       setComments((prev) => ({
         ...prev,
-        [blogId]: [...(prev[blogId] || []), text],
+        [blogId] : [...(prev[blogId] || []), text],
       }));
-    } catch (error) {
-      console.error("Failed to post comment", error);
+      showMsg.success('success', res?.message || 'Comment posted successfully');
+      setCommentInput((prev) => ({ ...prev, [blogId]: "" })); // Clear input
+      setIsComment(false) // close comment box after submit
+    } catch (e) {
+      console.error("Failed to post comment", e);
+      showMsg.error('error', e?.data?.message || 'Failed to post comment');
     }
   };
 
@@ -137,12 +142,12 @@ const Home = () => {
 
                     {/* COMMENT LIST */}
                     <div className="space-y-1 max-h-24 overflow-y-auto">
-                      {(comments[blog._id] || []).map((c, index) => (
+                      {(blog.comments || []).map((c, index) => (
                         <p
                           key={index}
                           className="text-xs bg-gray-100 px-2 py-1 rounded"
                         >
-                          {c}
+                          {c.comment_body}
                         </p>
                       ))}
                     </div>
