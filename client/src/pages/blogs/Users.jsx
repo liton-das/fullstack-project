@@ -9,7 +9,6 @@ const Users = () => {
 
   let i = 1;
   const users = data?.data?.data || [];
-
   return (
     <div className="bg-gray-50 min-h-screen p-4 sm:p-6">
 
@@ -74,12 +73,12 @@ const Users = () => {
               {/* Status */}
               <span
                 className={`inline-block px-3 py-1 text-xs rounded-full ${
-                  user.status === "Active"
+                  user.status !== "Active"
                     ? "bg-green-100 text-green-600"
                     : "bg-red-100 text-red-600"
                 }`}
               >
-                {user.status}
+                {!user.status?"Active":"Not Active"}
               </span>
 
               {/* Actions */}
@@ -138,12 +137,12 @@ const Users = () => {
                   <td className="p-3">
                     <span
                       className={`px-3 py-1 text-sm rounded-full ${
-                        user.status === "Active"
+                        user.status !== "Active"
                           ? "bg-green-100 text-green-600"
                           : "bg-red-100 text-red-600"
                       }`}
                     >
-                      {user.status}
+                      {!user.status?'Active':'Not Active'}
                     </span>
                   </td>
 

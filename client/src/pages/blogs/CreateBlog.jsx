@@ -3,6 +3,8 @@ import { useCreateBlogMutation } from "../../services/api/api";
 import Loading from "../../components/ui/Loading";
 import Inputs from "../../components/ui/Inputs";
 import Button from "../../components/ui/Button";
+import showMsg from "../../utils/getMessage";
+import { Navigate } from "react-router";
 const INITIAL_VALUE = {
   title: "",
   content: "",
@@ -16,21 +18,23 @@ const CreateBlog = () => {
   const [image, setImg] = useState(null);
   const [thumbnail, setThumbnail] = useState("");
   const currentImg = useRef();
-  if (isLoading) return <Loading />;
   // handle change for get input value
   const handleChange = (e) => {
     setInputField((prev) => ({
       ...prev,
       [e.target.name]: e.target.value,
     }));
-    // convert from title to slug
-    setSlug(
-      inputField.title
-        .toLowerCase()
-        .replace(/[^a-z0-9]+/g, "-")
-        .replace(/(^-|-$)+/g, ""),
-    );
+    
   };
+  // conver title to slug
+  React.useEffect(() => {
+    const generatedSlug = inputField.title
+      .toLowerCase()
+      .trim()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "");
+    setSlug(generatedSlug);
+  }, [inputField.title]);
   console.log(inputField);
   // handle image upload
   const handleImgUplod = (e) => {
@@ -55,11 +59,18 @@ const CreateBlog = () => {
     try {
       const res = await createBlog(formData).unwrap();
       console.log(res?.data?.message);
+      setThumbnail("");
       setInputField(INITIAL_VALUE);
+      setSlug("");
+      showMsg.success(res?.data?.message || "Blog created successfully");
+      <Navigate to={'/dashboard'}/>
     } catch (e) {
       console.log(e);
+      showMsg.error(e.data?.message || "Failed to create blog");
     }
   };
+  if (isLoading) return <Loading />;
+
   return (
     <div>
       <div className="bg-white p-6 rounded-2xl shadow max-w-4xl mx-auto space-y-6">

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useGetProfileQuery, useGetSearchItemsQuery } from "../services/api/api";
 import Loading from "./ui/Loading";
 import { Link, useNavigate } from "react-router";
-
+import Logo from '../assets/logo.png';
 const Navbar = () => {
   const [user, setUser] = useState({
     name: "Raj",
@@ -33,7 +33,16 @@ const Navbar = () => {
     <nav className="bg-white shadow-sm sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between gap-4">
         {/* LOGO */}
-        <h1 className="text-xl font-bold">BlogForge</h1>
+        <Link to="/" className="flex items-center gap-2">
+          <img
+            src={Logo}
+            alt="BlogForge Logo"
+            className="w-8 h-8 object-cover rounded"
+          />
+          <span className="text-xl font-bold">BlogForge</span>
+        </Link>
+
+        {/* <h1 className="text-xl font-bold">BlogForge</h1> */}
 
         {/* SEARCH */}
         <div className="hidden md:block relative w-full max-w-md">
@@ -84,22 +93,34 @@ const Navbar = () => {
             </Link>
           ):
             <div className="relative">
-              <img
-                src={data?.data?.user?.avatar}
-                alt="user"
-                onClick={() => setOpen(!open)}
-                className="w-10 h-10 rounded-full cursor-pointer border-2 border-blue-500"
-              />
+              {
+                data?.data?.user?.avatar ? (
+                  <img
+                    src={data?.data?.user?.avatar}
+                    className="w-10 h-10 rounded-full object-cover cursor-pointer"
+                    onClick={() => setOpen(!open)}
+                  />
+                ) : (
+                  <div
+                    className="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center cursor-pointer"
+                    onClick={() => setOpen(!open)}
+                  >
+                    <span className="text-gray-600 font-semibold">
+                      {data?.data?.user?.fullName?.charAt(0)}
+                    </span>
+                  </div>
+                )}
+              
 
               {open && (
                 <div className="absolute right-0 mt-3 w-48 bg-white border rounded-xl shadow-lg p-2">
-                  <p className="px-3 py-2 text-sm font-semibold">{user.name}</p>
+                  <p className="px-3 py-2 text-sm font-semibold">{data?.data?.user?.fullName}</p>
 
                   <hr />
 
-                  <button className="w-full text-left px-3 py-2 text-sm hover:bg-gray-100 rounded-lg">
+                  <Link to="/dashboard" className="w-full text-left px-3 py-2 text-sm hover:bg-gray-100 rounded-lg">
                     Dashboard
-                  </button>
+                  </Link>
 
                   <button className="w-full text-left px-3 py-2 text-sm hover:bg-gray-100 rounded-lg">
                     My Blogs

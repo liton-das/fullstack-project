@@ -3,8 +3,8 @@ const cloudinary = require("cloudinary").v2;
 // Configuration
 cloudinary.config({
   cloud_name: "dazlaqw2c",
-  api_key: "458562351659642",
-  api_secret: "unEkLZS3_mJ476179jNXLxogN54", // Click 'View API Keys' above to copy your API secret
+  api_key: process.env.CLOUDINARY_API_KEY || 458562351659642, // Click 'View API Keys' above to copy your API key
+  api_secret: process.env.CLOUDINARY_CLOUD_SECRET || "unEkLZS3_mJ476179jNXLxogN54", // Click 'View API Keys' above to copy your API secret
 });
 const uploadImage = async (folderName,bufferImg) => {
     const base64 = bufferImg.toString('base64')

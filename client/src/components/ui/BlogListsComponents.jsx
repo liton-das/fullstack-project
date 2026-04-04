@@ -45,6 +45,8 @@ const BlogListsComponents = ({headContent,title,limit=6}) => {
     setIsComment(current);  
   }
   if(isLoading) return <Loading/>
+  if(isError) return <div className="text-center text-red-500 py-10">Failed to load blogs</div>
+  if(blogs.length === 0) return <div className="text-center py-10">No blogs found</div>
   return (
     <div className="bg-gray-50 min-h-screen">
 

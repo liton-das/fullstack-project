@@ -61,21 +61,18 @@ const BlogDetails = () => {
           </div>
         </div>
 
-        {/* SHARE */}
-        <div className="flex gap-3 mb-6">
-          <button className="px-3 py-1 text-sm bg-blue-600 text-white rounded-lg">
-            Share
-          </button>
-          <button className="px-3 py-1 text-sm border rounded-lg">
-            Bookmark
-          </button>
-        </div>
-
         {/* CONTENT */}
         <div className="prose max-w-none text-gray-700 whitespace-pre-line">
           {data?.data?.content ||blog.content}
         </div>
-
+        {/* blog thumbnail image */}
+        <div className="mt-6">
+          <img
+            src={data?.data?.thumbnail || blog.image}
+            alt="Blog Thumbnail"
+            className="w-full h-auto rounded-xl"
+          />
+        </div>
         {/* TAGS */}
         <div className="mt-8 flex flex-wrap gap-2">
           {data?.data?.tags.map((tag, index) => (
@@ -88,42 +85,6 @@ const BlogDetails = () => {
           ))}
         </div>
       </div>
-
-      {/* ================= RELATED POSTS ================= */}
-      <section className="max-w-6xl mx-auto px-6 py-12">
-        <h2 className="text-xl font-semibold mb-6">Related Posts</h2>
-
-        <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6">
-
-          {[1, 2, 3].map((item) => (
-            <div
-              key={item}
-              className="bg-white rounded-xl shadow hover:shadow-md transition overflow-hidden"
-            >
-              <img
-                src={`https://source.unsplash.com/random/400x300?sig=${item}`}
-                className="w-full h-40 object-cover"
-              />
-
-              <div className="p-4">
-                <h3 className="text-sm font-semibold">
-                  Sample Blog Title
-                </h3>
-                <p className="text-xs text-gray-500 mt-1">
-                  Quick short description...
-                </p>
-              </div>
-            </div>
-          ))}
-
-        </div>
-      </section>
-
-      {/* ================= FOOTER ================= */}
-      <footer className="text-center py-6 text-gray-500 text-sm">
-        © 2026 BlogForge
-      </footer>
-
     </div>
   );
 };
