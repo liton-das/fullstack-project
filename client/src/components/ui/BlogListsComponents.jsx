@@ -29,12 +29,13 @@ const BlogListsComponents = ({headContent,title,limit=6}) => {
         ...prev,
         [blogId] : [...(prev[blogId] || []), text],
       }));
-      showMsg.success('success', res?.message || 'Comment posted successfully');
+      showMsg.success(res?.data?.message);
+      console.log(res.data)
       setCommentInput((prev) => ({ ...prev, [blogId]: "" })); // Clear input
       setIsComment(false) // close comment box after submit
     } catch (e) {
       console.error("Failed to post comment", e);
-      showMsg.error('error', e?.data?.message || 'Failed to post comment');
+      showMsg.error(e?.data?.message);
     }
   };
 
