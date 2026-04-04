@@ -25,7 +25,9 @@ const Login = () => {
     try {
       const res = await login(inputField).unwrap();
       showMsg.success(res?.message);
-      navigate("/dashboard");
+      if (res?.success) {
+        navigate("/dashboard");
+      }
       setInputField(INITIAL_VALUE);
     } catch (e) {
       showMsg.error(e?.data?.message);

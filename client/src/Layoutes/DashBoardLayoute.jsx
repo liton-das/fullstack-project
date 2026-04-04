@@ -8,9 +8,8 @@ import Loading from '../components/ui/Loading'
 const DashBoardLayoute = () => {
   const {data,isLoading} = useGetProfileQuery()
   if(isLoading) return <Loading/>
-  if(!data?.success){
-    return <Navigate to={'/login'}/>
-  }
+  if(!data?.success) return <Navigate to={'/login'}/>
+  
   return (
     <div className="flex min-h-screen bg-gray-100">
         <Sidebar/>

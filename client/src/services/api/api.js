@@ -14,6 +14,7 @@ const ReAuth = async (arg, api, extraOptions) => {
       await baseQuery({ url: "auth/v1/logout", method: POST }, arg, api, extraOptions);
     }
   }
+  
   return result;
 };
 export const blogApi = createApi({
@@ -55,11 +56,11 @@ export const blogApi = createApi({
     }),
     // logout api
     logOut: build.mutation({
-      query: (data) => ({
+      query: () => ({
         url: "auth/v1/logout",
         method: "POST",
-        body: data,
       }),
+      invalidatesTags: ["Blog"],
     }),
     // get user profile api
     getProfile: build.query({
@@ -88,6 +89,7 @@ export const blogApi = createApi({
         method: "POST",
         body: data,
       }),
+      invalidatesTags: ["Blog"],
     }),
     // update blog
     updateBlog: build.mutation({
@@ -96,12 +98,19 @@ export const blogApi = createApi({
         method: "PUT",
         body: data,
       }),
+      invalidatesTags: ["Blog"],
     }),
     // get blog by slug
     getReadBlog: build.query({
       query: (slug) => `blog/v1/read/${slug}`,
       providesTags: ["Blog"],
     }),
+    // get single blog by author id
+    getSingleBlogByAuthorId: build.query({
+      query: ({ page = 1, limit = 10}) => `blog/v1/single-blog/?page=${page}&limit=${limit}`,
+      providesTags: ["Blog"],
+    }),
+
     createComment: build.mutation({
       query: ({ id, ...data }) => ({
         url: `blog/v1/create-comment/${id}`,
@@ -133,6 +142,7 @@ export const {
   useLoginMutation,
   useGetProfileQuery,
   useGetUserListsQuery,
+  useGetSingleBlogByAuthorIdQuery,
   useGetBlogListsQuery,
   useGetSearchItemsQuery,
   useCreateBlogMutation,

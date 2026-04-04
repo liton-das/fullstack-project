@@ -4,6 +4,7 @@ import {
   useDeleteSingleBlogMutation,
   useGetBlogListsQuery,
   useGetSearchItemsQuery,
+  useGetSingleBlogByAuthorIdQuery,
   useUpdateBlogMutation,
 } from "../../services/api/api";
 import Loading from "../../components/ui/Loading";
@@ -17,13 +18,12 @@ const AllBlogs = () => {
   const [deleteBlog, { isLoading: loaded }] = useDeleteSingleBlogMutation();
   // handle delete function
   const handleDelete = async (id) => {
-    const confirmDelete = window.confirm("Are you sure to delete this blog?");
-    if (!confirmDelete) return;
     try {
-      const res = await deleteBlog(id).unwrap();
-      showMsg.success(res?.data?.message);
+      await deleteBlog(id).unwrap();
+
+      showMsg.success("Blog deleted successfully");
     } catch (e) {
-      showMsg.error(e?.data?.message);
+      showMsg.error(e?.data?.message || "Failed to delete blog");
     }
   };
   useEffect(() => {
@@ -92,7 +92,7 @@ const AllBlogs = () => {
   };
 
   const [page, setPage] = useState(1);
-  const { data, isLoading } = useGetBlogListsQuery({ page, limit: 10 });
+  const { data, isLoading } = useGetSingleBlogByAuthorIdQuery({ page, limit: 10 });
   if (isLoading) return <Loading />;
   console.log(data?.data?.pagination);
   let i = 1;
@@ -113,7 +113,7 @@ const AllBlogs = () => {
         </div>
 
         {/* Filters */}
-        <div className="flex flex-col sm:flex-row flex-wrap gap-3 sm:gap-4">
+        <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
           <input
             type="text"
             placeholder="Search blog..."
@@ -134,9 +134,70 @@ const AllBlogs = () => {
             <option>Draft</option>
           </select>
         </div>
+        {/* ================= MOBILE VIEW (CARD) ================= */}
+        <div className="sm:hidden space-y-4">
+          {(searchTerms?.data || data?.data?.data || []).map((blog) => (
+            <div key={blog._id} className="bg-white p-4 rounded-xl shadow space-y-3">
+              {/* Image + Title */}
+              <div className="flex gap-3">
+                <img src={blog.thumbnail} className="w-16 h-16 rounded-lg object-cover" />
+                <div>
+                  <p className="font-semibold text-sm line-clamp-2">{blog.title}</p>
+                  <p className="text-xs text-gray-400">{moment(blog.createdAt).fromNow()}</p>
+                </div>
+              </div>
 
-        {/* Table */}
-        <div className="overflow-x-auto">
+              {/* Info */}
+              <div className="text-xs text-gray-500 space-y-1">
+                <p>
+                  <span className="font-medium">Slug:</span> {blog.slug}
+                </p>
+                <p>
+                  <span className="font-medium">Author:</span> {blog.author?.fullName}
+                </p>
+              </div>
+
+              {/* Status */}
+              <span
+                className={`inline-block px-3 py-1 text-xs rounded-full ${
+                  blog.isActive ? "bg-green-100 text-green-600" : "bg-yellow-100 text-yellow-600"
+                }`}
+              >
+                {blog.isActive ? "Published" : "Draft"}
+              </span>
+
+              {/* Actions */}
+              <div className="flex gap-2 pt-2">
+                <button
+                  onClick={() => {
+                    setSelectedBlog(blog);
+                    setFormData({
+                      title: blog.title,
+                      slug: blog.slug,
+                      content: blog.content,
+                      isActive: blog.isActive,
+                    });
+                    setPreview(blog.thumbnail);
+                    setThumbnail(null);
+                    setIsOpen(true);
+                  }}
+                  className="flex-1 bg-blue-500 text-white py-2 rounded-lg text-sm"
+                >
+                  Edit
+                </button>
+
+                <button
+                  onClick={() => handleDelete(blog._id)}
+                  className="flex-1 bg-red-500 text-white py-2 rounded-lg text-sm"
+                >
+                  Delete
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+        {/* ================= DESKTOP TABLE ================= */}
+        <div className="hidden sm:block overflow-x-auto">
           <table className="w-full min-w-150">
             <thead>
               <tr className="text-left text-gray-500 border-b text-xs sm:text-sm">
@@ -235,7 +296,7 @@ const AllBlogs = () => {
             {data?.data?.pagination?.totalItems} blogs
           </p>
 
-          <div className="flex gap-2 flex-wrap">
+          <div className="flex flex-wrap justify-center sm:justify-end gap-2">
             {/* Prev */}
             <button
               onClick={() => setPage((prev) => prev - 1)}

@@ -1,6 +1,10 @@
 import { NavLink } from "react-router";
+import { useLogOutMutation } from "../services/api/api";
+import Loading from "../components/ui/Loading";
 
 const Sidebar = () => {
+  const [logOut,{isLoading}] = useLogOutMutation()
+  if(isLoading) return <Loading/>
   const menus = [
     { name: "Dashboard", path: "/dashboard" },
     { name: "All Blogs", path: "all-blogs" },
@@ -8,7 +12,14 @@ const Sidebar = () => {
     { name: "Comments", path: "comments" },
     { name: "Users", path: "users" },
   ];
- 
+ const handleLogout = async()=>{
+    try {
+      await logOut().unwrap()
+    } catch (e) {
+      console.log(e)
+    }
+  }
+
   return (
     <div className="w-64 bg-gray-900 text-white min-h-screen p-5 ">
 
@@ -24,9 +35,9 @@ const Sidebar = () => {
             {menu.name}
           </NavLink>
         ))}
-        <NavLink to={'auth/v1/logout'} className={'p-2 rounded hover:bg-gray-700 text-red-500 '}>
+        <button onClick={handleLogout} className={'p-2 rounded hover:bg-gray-700 text-red-500 '}>
           Logout
-        </NavLink>
+        </button>
       </nav>
 
     </div>
