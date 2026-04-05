@@ -1,17 +1,17 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-const baseQuery = fetchBaseQuery({ baseUrl: `https://fullstack-project-nsri.vercel.app/`, credentials: "include" });
+const baseQuery = fetchBaseQuery({ baseUrl: `https://fullstack-project-nsri.vercel.app`, credentials: "include" });
 const ReAuth = async (arg, api, extraOptions) => {
   let result = await baseQuery(arg, api, extraOptions);
   if (result.error?.status === 401) {
     const refreshResult = await baseQuery(
-      { url: "auth/v1/refreshAccess-token", method: POST },
+      { url: "/auth/v1/refreshAccess-token", method: POST },
       api,
       extraOptions,
     );
     if (refreshResult.data) {
       result = await baseQuery(arg, api, extraOptions);
     } else {
-      await baseQuery({ url: "auth/v1/logout", method: POST }, arg, api, extraOptions);
+      await baseQuery({ url: "/auth/v1/logout", method: POST }, arg, api, extraOptions);
     }
   }
   
@@ -25,7 +25,7 @@ export const blogApi = createApi({
     // Register api
     register: build.mutation({
       query: (data) => ({
-        url: `auth/v1/register`,
+        url: `/auth/v1/register`,
         method: "POST",
         body: data,
       }),
@@ -33,7 +33,7 @@ export const blogApi = createApi({
     // verify-otp api
     VerifyOtp: build.mutation({
       query: (data) => ({
-        url: "auth/v1/verify-otp",
+        url: "/auth/v1/verify-otp",
         method: "POST",
         body: data,
       }),
@@ -41,7 +41,7 @@ export const blogApi = createApi({
     // resend otp api
     resendOtp: build.mutation({
       query: (data) => ({
-        url: "auth/v1/resend-otp",
+        url: "/auth/v1/resend-otp",
         method: "POST",
         body: data,
       }),
@@ -49,7 +49,7 @@ export const blogApi = createApi({
     // login api
     login: build.mutation({
       query: (data) => ({
-        url: "auth/v1/login",
+        url: "/auth/v1/login",
         method: "POST",
         body: data,
       }),
@@ -57,35 +57,35 @@ export const blogApi = createApi({
     // logout api
     logOut: build.mutation({
       query: () => ({
-        url: "auth/v1/logout",
+        url: "/auth/v1/logout",
         method: "POST",
       }),
       invalidatesTags: ["Blog"],
     }),
     // get user profile api
     getProfile: build.query({
-      query: () => `auth/v1/get-profile`,
+      query: () => `/auth/v1/get-profile`,
       providesTags: ["Blog"],
     }),
     // get user lists
     getUserLists: build.query({
-      query: () => "auth/v1/get-user-lists",
+      query: () => "/auth/v1/get-user-lists",
       providesTags: ["Blog"],
     }),
     // get blog lists
     getBlogLists: build.query({
-      query: ({ page = 1, limit = 10 }) => `blog/v1/get-blog-lists?page=${page}&limit=${limit}`,
+      query: ({ page = 1, limit = 10 }) => `/blog/v1/get-blog-lists?page=${page}&limit=${limit}`,
       providesTags: ["Blog"],
     }),
     // get search blog items
     getSearchItems: build.query({
-      query: (searchItems) => `blog/v1/search-tarms/${searchItems}`,
+      query: (searchItems) => `/blog/v1/search-tarms/${searchItems}`,
       
     }),
     // create new Blog
     createBlog: build.mutation({
       query: (data) => ({
-        url: `blog/v1/create-blog`,
+        url: `/blog/v1/create-blog`,
         method: "POST",
         body: data,
       }),
@@ -94,7 +94,7 @@ export const blogApi = createApi({
     // update blog
     updateBlog: build.mutation({
       query: ({ id, data }) => ({
-        url: `blog/v1/update-blog/${id}`,
+        url: `/blog/v1/update-blog/${id}`,
         method: "PUT",
         body: data,
       }),
@@ -102,18 +102,18 @@ export const blogApi = createApi({
     }),
     // get blog by slug
     getReadBlog: build.query({
-      query: (slug) => `blog/v1/read/${slug}`,
+      query: (slug) => `/blog/v1/read/${slug}`,
       providesTags: ["Blog"],
     }),
     // get single blog by author id
     getSingleBlogByAuthorId: build.query({
-      query: ({ page = 1, limit = 10}) => `blog/v1/single-blog/?page=${page}&limit=${limit}`,
+      query: ({ page = 1, limit = 10}) => `/blog/v1/single-blog/?page=${page}&limit=${limit}`,
       providesTags: ["Blog"],
     }),
 
     createComment: build.mutation({
       query: ({ id, ...data }) => ({
-        url: `blog/v1/create-comment/${id}`,
+        url: `/blog/v1/create-comment/${id}`,
         method: "POST",
         body: data,
       }),
@@ -121,13 +121,13 @@ export const blogApi = createApi({
     }),
     // get comment lists
     getCommentLists: build.query({
-      query: () => `blog/v1/get-all-comments`,
+      query: () => `/blog/v1/get-all-comments`,
       providesTags: ["Blog"],
     }),
     // delete single blog
     deleteSingleBlog: build.mutation({
       query: (id) => ({
-        url: `blog/v1/delete-blog/${id}`,
+        url: `/blog/v1/delete-blog/${id}`,
         method: "DELETE",
       }),
       invalidatesTags: ["Blogs"],
