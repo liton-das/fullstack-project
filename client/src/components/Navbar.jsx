@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useGetProfileQuery, useGetSearchItemsQuery } from "../services/api/api";
 import Loading from "./ui/Loading";
 import { Link, useNavigate } from "react-router";
-import Logo from '../assets/logo.png';
+import Logo from '../../public/Logo.png';
 const Navbar = () => {
   const [user, setUser] = useState({
     name: "Raj",
