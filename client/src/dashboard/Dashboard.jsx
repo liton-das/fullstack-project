@@ -7,7 +7,6 @@ import { Link } from 'react-router'
 const Dashboard = () => {
   const [page, setPage] = useState(1);
   const {data,isLoading} = useGetBlogListsQuery({page,limit:10})
-  console.log(data)
   const {data:comments} = useGetCommentListsQuery()
   if(isLoading) return <Loading/>
   return (
