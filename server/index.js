@@ -8,9 +8,12 @@ require('dotenv').config()
 const app = express()
 const PORT = process.env.PORT || 4000
 app.use(cors({
-    origin:'https://fullstack-project-green.vercel.app',
-    credentials:true,
-}))
+  origin: [
+    "http://localhost:5173",
+    "https://fullstack-project-green.vercel.app"
+  ],
+  credentials: true
+}));
 app.use(express.json())
 app.use(cookieParser())
 app.use(route)
