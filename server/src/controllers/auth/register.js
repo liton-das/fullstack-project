@@ -110,9 +110,10 @@ const loginController = async (req, res) => {
     res
       .cookie("x-Acc_Token", accessToken, {
         httpOnly: true,
-        secure: false,
+        sameSite: "none",
+        secure: true,
       })
-      .cookie("x-Ref_Token", refreshToken, { httpOnly: true, secure: false });
+      .cookie("x-Ref_Token", refreshToken, { httpOnly: true, secure: true, sameSite: "none" });
     return responseHeader.success(res, "Login successfully", 200);
   } catch (e) {
     console.log(e);
