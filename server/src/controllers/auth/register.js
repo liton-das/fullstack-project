@@ -124,7 +124,7 @@ const loginController = async (req, res) => {
 const getUserProfile = async(req,res)=>{
     try {
         const totalUsers = await User.countDocuments()
-        const user = await User.findById(req.user._id).select('fullName phone avatar role createdAt updatedAt isVerify')
+        const user = await User.findById(req.user._id).select('fullName phone avatar role email createdAt updatedAt isVerify')
         if(!user) return responseHeader.error(res,'User not found!',404)
         return responseHeader.success(res,'success',200,{user,totalUsers})
     } catch (e) {

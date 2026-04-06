@@ -18,6 +18,7 @@ import BlogDetails from './pages/BlogDetails'
 import Blogs from './pages/public/Blogs'
 import About from './pages/public/About'
 import SearchItem from './pages/SearchItem'
+import Profile from './pages/auth/Profile'
 const App = () => {
   const router = createBrowserRouter(createRoutesFromElements(
     <Route>
@@ -44,6 +45,7 @@ const App = () => {
       <Route path='/verify-otp' element={<VerifyOtp/>}/>
       <Route path='/resend-otp' element={<ResendOtp/>}/>
       <Route path='/login' element={<Login/>}/>
+      <Route path='/profile' element={<Profile/>}/>
     </Route>
   ))
 

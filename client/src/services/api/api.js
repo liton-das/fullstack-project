@@ -62,6 +62,15 @@ export const blogApi = createApi({
       }),
       invalidatesTags: ["Blog"],
     }),
+    // update profile api
+    updateProfile: build.mutation({
+      query: (data) => ({
+        url: "/auth/v1/update-profile",
+        method: "PUT",
+        body: data,
+      }),
+      invalidatesTags: ["Blog"],
+    }),
     // get user profile api
     getProfile: build.query({
       query: () => `/auth/v1/get-profile`,
@@ -151,5 +160,6 @@ export const {
   useGetCommentListsQuery,
   useDeleteSingleBlogMutation,
   useGetReadBlogQuery,
-  useLogOutMutation
+  useLogOutMutation,
+  useUpdateProfileMutation
 } = blogApi;

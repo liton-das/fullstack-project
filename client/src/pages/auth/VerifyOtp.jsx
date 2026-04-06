@@ -24,13 +24,12 @@ const VerifyOtp = () => {
     e.preventDefault();
     try {
       const res = await VerifyOtp(inputField).unwrap();
-      showMsg.success(res?.message);
+      showMsg.success(res?.data?.message);
       navigate("/login");
     } catch (e) {
-      showMsg.error(e.data.message);
+      showMsg.error(e?.data?.message);
     }
   };
-  console.log(inputField);
   return (
     <div className="bg-slate-100 w-full h-screen flex justify-center items-center">
       <div className="bg-white shadow-sm rounded-lg w-120 py-5">

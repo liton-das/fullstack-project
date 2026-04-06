@@ -7,7 +7,7 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_CLOUD_SECRET || "unEkLZS3_mJ476179jNXLxogN54", // Click 'View API Keys' above to copy your API secret
 });
 const uploadImage = async (folderName,bufferImg) => {
-    const base64 = bufferImg.toString('base64')
+    const base64 = bufferImg.toString("base64")
     const dataURL = `data:image/jpeg;base64,${base64}`
     // Upload an image
   const uploadResult = await cloudinary.uploader

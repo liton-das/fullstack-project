@@ -24,7 +24,7 @@ const Login = () => {
     e.preventDefault();
     try {
       const res = await login(inputField).unwrap();
-      showMsg.success(res?.message);
+      showMsg.success(res?.data?.message);
       if (res?.success) {
         navigate("/dashboard");
       }

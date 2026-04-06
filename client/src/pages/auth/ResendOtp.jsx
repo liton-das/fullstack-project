@@ -24,7 +24,6 @@ const submitHandler=async(e)=>{
     try {
         const res = await resendOtp(inputField).unwrap()
         showMsg.success(res?.data?.message)
-        console.log(res)
     } catch (e) {
         showMsg.error(e?.data?.message)
     }

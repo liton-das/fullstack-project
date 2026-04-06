@@ -4,7 +4,7 @@ import { Link } from "react-router";
 import { FaComment } from "react-icons/fa";
 import showMsg from "../../utils/getMessage";
 import Loading from "./Loading";
-const BlogListsComponents = ({headContent,title,limit=6}) => {
+const BlogListsComponents = ({headContent,title,limit=7}) => {
   const [page, setPage] = useState(1);
   // comment state (store per blogId)
   const [comments, setComments] = useState({});
@@ -30,11 +30,9 @@ const BlogListsComponents = ({headContent,title,limit=6}) => {
         [blogId] : [...(prev[blogId] || []), text],
       }));
       showMsg.success(res?.data?.message);
-      console.log(res.data)
       setCommentInput((prev) => ({ ...prev, [blogId]: "" })); // Clear input
       setIsComment(false) // close comment box after submit
     } catch (e) {
-      console.error("Failed to post comment", e);
       showMsg.error(e?.data?.message);
     }
   };
@@ -172,6 +170,8 @@ const BlogListsComponents = ({headContent,title,limit=6}) => {
       )}
 
       {/* PAGINATION */}
+      
+      
       <div className="flex justify-center gap-2 pb-10">
         <button
           onClick={() => setPage((prev) => prev - 1)}
@@ -192,8 +192,8 @@ const BlogListsComponents = ({headContent,title,limit=6}) => {
           Next
         </button>
       </div>
-
     </div>
+
   );
 };
 

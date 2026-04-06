@@ -1,150 +1,128 @@
 import React, { useState } from "react";
 import { useGetProfileQuery, useGetSearchItemsQuery } from "../services/api/api";
 import Loading from "./ui/Loading";
-import { Link, useNavigate } from "react-router";
-import Logo from '/Logo.png';
-const Navbar = () => {
-  const [user, setUser] = useState({
-    name: "Raj",
-    image: "https://i.pravatar.cc/40",
-  });
+import { Link, useNavigate, useLocation } from "react-router";
+import Logo from "/Logo.png";
 
+
+const Navbar = () => {
   const [open, setOpen] = useState(false);
   const [searchItems, setSearchItems] = useState("");
 
   const navigate = useNavigate();
+  const location = useLocation();
 
   const { data, isLoading } = useGetProfileQuery();
 
-  // Search API
   const { data: searchData } = useGetSearchItemsQuery(searchItems, {
-    skip: !searchItems, // don't call API if empty
+    skip: !searchItems,
   });
-  if (isLoading) return <Loading />;
 
+  
   const results = searchData?.data || [];
-// Handle submit (Enter key)
+  
   const handleSearch = () => {
     if (!searchItems.trim()) return;
     navigate(`/search?blog=${searchItems}`);
     setSearchItems("");
   };
+  
+  if (isLoading) return <Loading />;
   return (
-    <nav className="bg-white shadow-sm sticky top-0 z-50">
-      <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between gap-4">
-        {/* LOGO */}
-        <Link to="/" className="flex items-center gap-2">
-          <img
-            src={Logo}
-            alt="BlogForge Logo"
-            className="w-8 h-8 object-cover rounded"
-          />
-          <span className="text-xl font-bold">BlogForge</span>
-        </Link>
+    <>
+      {/* ================= TOP NAVBAR ================= */}
+      <nav className="bg-white shadow-sm sticky top-0 z-50">
+        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between gap-4">
+          
+          {/* LOGO */}
+          <Link to="/" className="flex items-center gap-2">
+            <img src={Logo} alt="Logo" className="w-8 h-8 rounded" />
+            <span className="text-xl font-bold">BlogForge</span>
+          </Link>
 
-        {/* <h1 className="text-xl font-bold">BlogForge</h1> */}
+          {/* SEARCH */}
+          <div className="hidden md:block relative w-full max-w-md">
+            <input
+              type="text"
+              placeholder="Search blogs..."
+              value={searchItems}
+              onChange={(e) => setSearchItems(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && handleSearch()}
+              className="w-full border px-4 py-2 rounded-lg text-sm outline-none focus:ring-2 focus:ring-blue-500"
+            />
 
-        {/* SEARCH */}
-        <div className="hidden md:block relative w-full max-w-md">
-          <input
-            type="text"
-            placeholder="Search blogs..."
-            value={searchItems}
-            onChange={(e) => setSearchItems(e.target.value)}
-            className="w-full border px-4 py-2 rounded-lg text-sm outline-none focus:ring-2 focus:ring-blue-500"
-          />
-
-          {/* SEARCH DROPDOWN */}
-          {searchItems && (
-            <div className="absolute top-12 left-0 w-full bg-white border rounded-xl shadow-lg max-h-60 overflow-y-auto z-50">
-              {results.length > 0 ? (
-                results.map((item) => (
-                  <Link
-                    key={item._id}
-                    to={`/search/${item.title}`}
-                    onClick={() => {
-                      setSearchItems("");
-                      setIsFocused(false);
-                    }}
-                    className="block px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm"
-                  >
-                    {item.title}
-                  </Link>
-                ))
-              ) : (
-                <p className="px-4 py-2 text-sm text-gray-500">No results found</p>
-              )}
-            </div>
-          )}
-        </div>
-
-        {/* MENU */}
-        <div className="hidden md:flex gap-6 text-sm">
-          <Link to="/">Home</Link>
-          <Link to="/blogs">Blogs</Link>
-          <Link to="/about">About</Link>
-        </div>
-
-        {/* RIGHT SIDE */}
-        <div className="relative">
-          {!data?.data?.user ? (
-            <Link to={"/login"} className="bg-blue-600 text-white px-4 py-2 rounded-lg">
-              Login
-            </Link>
-          ):
-            <div className="relative">
-              {
-                data?.data?.user?.avatar ? (
-                  <img
-                    src={data?.data?.user?.avatar}
-                    className="w-10 h-10 rounded-full object-cover cursor-pointer"
-                    onClick={() => setOpen(!open)}
-                  />
+            {searchItems && (
+              <div className="absolute top-12 left-0 w-full bg-white border rounded-xl shadow-lg max-h-60 overflow-y-auto z-50">
+                {results.length > 0 ? (
+                  results.map((item) => (
+                    <Link
+                      key={item._id}
+                      to={`/search/${item.title}`}
+                      onClick={() => setSearchItems("")}
+                      className="block px-4 py-2 hover:bg-gray-100 text-sm"
+                    >
+                      {item.title}
+                    </Link>
+                  ))
                 ) : (
-                  <div
-                    className="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center cursor-pointer"
-                    onClick={() => setOpen(!open)}
-                  >
-                    <span className="text-gray-600 font-semibold">
-                      {data?.data?.user?.fullName?.charAt(0)}
-                    </span>
+                  <p className="px-4 py-2 text-sm text-gray-500">
+                    No results found
+                  </p>
+                )}
+              </div>
+            )}
+          </div>
+
+          {/* MENU */}
+          <div className="hidden md:flex gap-6 text-sm">
+            <Link to="/">Home</Link>
+            <Link to="/blogs">Blogs</Link>
+            <Link to="/about">About</Link>
+            <Link to="/profile">Profile</Link>
+          </div>
+
+          {/* RIGHT SIDE */}
+          <div className="relative">
+            {!data?.data?.user ? (
+              <Link
+                to={"/login"}
+                className="bg-blue-600 text-white px-4 py-2 rounded-lg"
+              >
+                Login
+              </Link>
+            ) : (
+              <div className="relative">
+                <img
+                  src={data?.data?.user?.avatar || "https://i.pravatar.cc/40"}
+                  className="w-10 h-10 rounded-full object-cover cursor-pointer"
+                  onClick={() => setOpen(!open)}
+                />
+
+                {open && (
+                  <div className="absolute right-0 mt-3 w-48 bg-white border rounded-xl shadow-lg p-2">
+                    <p className="px-3 py-2 text-sm font-semibold">
+                      {data?.data?.user?.fullName}
+                    </p>
+
+                    <Link to="/dashboard" className="block px-3 py-2 text-sm hover:bg-gray-100 rounded-lg">
+                      Dashboard
+                    </Link>
+
+                    <button className="w-full text-left px-3 py-2 text-sm hover:bg-gray-100 rounded-lg">
+                      My Blogs
+                    </button>
+
+                    <button className="w-full text-left px-3 py-2 text-sm text-red-500 hover:bg-red-50 rounded-lg">
+                      Logout
+                    </button>
                   </div>
                 )}
-              
-
-              {open && (
-                <div className="absolute right-0 mt-3 w-48 bg-white border rounded-xl shadow-lg p-2">
-                  <p className="px-3 py-2 text-sm font-semibold">{data?.data?.user?.fullName}</p>
-
-                  <hr />
-
-                  <Link to="/dashboard" className="w-full text-left px-3 py-2 text-sm hover:bg-gray-100 rounded-lg">
-                    Dashboard
-                  </Link>
-
-                  <button className="w-full text-left px-3 py-2 text-sm hover:bg-gray-100 rounded-lg">
-                    My Blogs
-                  </button>
-
-                  <button className="w-full text-left px-3 py-2 text-sm hover:bg-gray-100 rounded-lg">
-                    Settings
-                  </button>
-
-                  <hr />
-
-                  <button
-                    onClick={() => setUser(null)}
-                    className="w-full text-left px-3 py-2 text-sm text-red-500 hover:bg-red-50 rounded-lg"
-                  >
-                    Logout
-                  </button>
-                </div>
-              )}
-            </div>
-          }
+              </div>
+            )}
+          </div>
         </div>
-      </div>
-    </nav>
+      </nav>
+    </>
   );
 };
 
