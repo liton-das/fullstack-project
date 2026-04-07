@@ -35,7 +35,6 @@ const CreateBlog = () => {
       .replace(/^-+|-+$/g, "");
     setSlug(generatedSlug);
   }, [inputField.title]);
-  console.log(inputField);
   // handle image upload
   const handleImgUplod = (e) => {
     const file = e.target.files[0];

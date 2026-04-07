@@ -52,7 +52,7 @@ const updateBlogController = async(req,res)=>{
         existBlog.slug = slug
         if(content) existBlog.content = content
         if(tags) existBlog.tags = tags ? tags.split(',').map((tag)=>tag.trim()) : existBlog.tags
-        existBlog.isActive = 'true' ? true : false
+        
         if(existBlog.thumbnail){
             const existImg = existBlog.thumbnail.split('/').pop().split('.')[0]
             await cloudinary.uploader.destroy(`Blog-image/${existImg}`)

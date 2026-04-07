@@ -15,60 +15,61 @@ const Profile = () => {
   const [limit, setLimit] = useState(3);
   const { data: getSingleBlogData } = useGetSingleBlogByAuthorIdQuery({ limit, page: 1 });
   const user = data?.data?.user;
-  
+  console.log(user,'user');
   const [updateProfile, { isLoading: updating }] = useUpdateProfileMutation();
   
   const [editOpen, setEditOpen] = useState(false);
 
   const [formData, setFormData] = useState({
     fullName: "",
-    phone: "",
-    avatar: "",
+    phone: ""
   });
   const [backendImg, setBackendImg] = useState("");
+  const [frontendImg, setFrontendImg] = useState("");
   const ref = useRef();
     // handle edit open
   const handleEditOpen = () => {
     setFormData({
       fullName: user?.fullName || "",
-      phone: user?.phone || "",
-      avatar: user?.avatar || "",
+      phone: user?.phone || ""
     });
     setEditOpen(true);
   };
-  // handle img
+
+  // handle img change
   const handleImgChange = (e) => {
     const file = e.target.files[0];
-    if (!file) return;
-    setFormData({ ...formData, avatar: file });
-    const reader = new FileReader();
-    reader.onload = () => {
-      setBackendImg(reader.result);
-    };
-    reader.readAsDataURL(file);
-
+    const imgUrl = URL.createObjectURL(file);
+    setFrontendImg(imgUrl);
+    setBackendImg(file);
   };
 
   // handle update
   const handleUpdate = async (e) => {
-    e.preventDefault();
-    try {
-      const formData = new FormData();
-      
-      formData.append("fullName", formData.fullName);
-      formData.append("phone", formData.phone);
-      formData.append("avatar", formData.avatar);
+  e.preventDefault();
 
-      const res = await updateProfile(formData).unwrap();
-      showMsg.success(res?.data?.message)
-      setEditOpen(false);
-    } catch (e) {
-      console.log(e);
-      showMsg.error(e?.data?.message || "Something went wrong")
+  try {
+    const formField = new FormData();
+
+    formField.append("fullName", formData.fullName);
+    formField.append("phone", formData.phone);
+
+    // ONLY send image if user selected new one
+    if (backendImg instanceof File) {
+      formField.append("avatar", backendImg);
     }
-  };
+
+    const res = await updateProfile(formField).unwrap();
+
+    showMsg.success(res?.data?.message);
+
+    setEditOpen(false);
+  } catch (e) {
+    console.log(e);
+    showMsg.error(e?.data?.message || "Something went wrong");
+  }
+};
   if (isLoading) return <Loading />;
-  if (!data?.data?.user) return <Navigate to={"/login"} />;
   return (
     <div className="min-h-screen bg-gray-50 py-10 px-4 md:px-8">
       {/* CONTAINER */}
@@ -80,7 +81,7 @@ const Profile = () => {
             {/* AVATAR */}
             <div className="relative">
               <img
-                src={user?.avatar || "https://i.pravatar.cc/150"}
+                src={frontendImg || user?.avatar || "https://via.placeholder.com/150"}
                 alt="avatar"
                 className="w-28 h-28 rounded-full object-cover border-4 border-blue-100"
               />
@@ -176,6 +177,7 @@ const Profile = () => {
               type="text"
               placeholder="Full Name"
               value={formData.fullName}
+              name="fullName"
               onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
               className="w-full mb-3 px-4 py-2 border rounded-lg"
             />
@@ -184,6 +186,7 @@ const Profile = () => {
             <input
               type="phone"
               placeholder="Phone"
+              name="phone"
               value={formData.phone}
               onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
               className="w-full mb-3 px-4 py-2 border rounded-lg"
@@ -193,8 +196,7 @@ const Profile = () => {
             <div className="flex items-center gap-3 mb-4" onClick={() => ref.current.click()}>
               <img
                 src={
-                  backendImg ||
-                  (typeof formData.avatar === "string" ? formData.avatar : user?.avatar)
+                  frontendImg
                 }
                 alt="avatar"
                 className="w-16 h-16 rounded-full object-cover border-4 border-blue-100 cursor-pointer"
@@ -220,7 +222,6 @@ const Profile = () => {
 
               <button
                 type="submit"
-                onClick={handleUpdate}
                 disabled={updating}
                 className="px-4 py-2 bg-blue-600 text-white rounded-lg"
               >

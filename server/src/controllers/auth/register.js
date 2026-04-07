@@ -167,14 +167,14 @@ const updateUserProfileController = async(req,res)=>{
     if(!existUser) return responseHeader.error(res,'User not authorized!',401)
     if(existUser.avatar){
       const existImg = existUser.avatar.split('/').pop().split('.')[0]
-      await cloudinary.uploader.destroy(`profile/${existImg}`)
+      await cloudinary.uploader.destroy(`Blog-image/${existImg}`)
     }
-    const image = await uploadImage('profile',bufferImg)
+    const image = await uploadImage('Blog-image',bufferImg)
     if(fullName) existUser.fullName = fullName
     if(phone) existUser.phone = phone
     if(existUser.avatar) existUser.avatar = image
     await existUser.save()
-    return responseHeader.success(res,'User profile updated',200)
+    return responseHeader.success(res,'User profile updated successfully',200)
   } catch (e) {
     console.log(e)
     return responseHeader.error(res)
