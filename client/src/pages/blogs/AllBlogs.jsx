@@ -16,6 +16,8 @@ const AllBlogs = () => {
   const [search, setSearch] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const [deleteBlog, { isLoading: loaded }] = useDeleteSingleBlogMutation();
+  const [page, setPage] = useState(1);
+  const { data, isLoading } = useGetSingleBlogByAuthorIdQuery({ page, limit: 10 });
   // handle delete function
   const handleDelete = async (id) => {
     try {
@@ -91,10 +93,9 @@ const AllBlogs = () => {
     }
   };
 
-  const [page, setPage] = useState(1);
-  const { data, isLoading } = useGetSingleBlogByAuthorIdQuery({ page, limit: 10 });
+  
   if (isLoading) return <Loading />;
-  console.log(data?.data?.pagination);
+  console.log(data?.data?.data);
   let i = 1;
 
   return (

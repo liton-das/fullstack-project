@@ -68,6 +68,7 @@ const Profile = () => {
     }
   };
   if (isLoading) return <Loading />;
+  if (!data?.data?.user) return <Navigate to={"/login"} />;
   return (
     <div className="min-h-screen bg-gray-50 py-10 px-4 md:px-8">
       {/* CONTAINER */}
