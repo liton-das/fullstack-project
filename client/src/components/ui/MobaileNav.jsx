@@ -1,6 +1,6 @@
 import React from "react";
 // Icons
-import { FiHome, FiFileText, FiInfo, FiUser } from "react-icons/fi";
+import { FiHome, FiFileText, FiInfo, FiUser, FiPlus } from "react-icons/fi";
 import { Link } from "react-router";
 const MobaileNav = () => {
   return (
@@ -37,6 +37,15 @@ const MobaileNav = () => {
               }`}
             />
             <span className="text-xs">About</span>
+          </Link>
+          {/* Create Blog */}
+          <Link to="/create-blog" className="flex flex-col items-center">
+            <FiPlus
+              className={`text-xl ${
+                location.pathname === "/create-blog" ? "text-blue-600" : "text-gray-500"
+              }`}
+            />
+            <span className="text-xs">Create Blog</span>
           </Link>
 
           {/* Profile */}

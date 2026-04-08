@@ -4,8 +4,7 @@ import Loading from "./ui/Loading";
 import { Link, useNavigate, useLocation } from "react-router";
 import Logo from "/Logo.png";
 // react icons plus icons
-import { FiSearch ,FiPlus} from "react-icons/fi";
-
+import { FiSearch, FiPlus } from "react-icons/fi";
 
 const Navbar = () => {
   const [open, setOpen] = useState(false);
@@ -15,27 +14,25 @@ const Navbar = () => {
   const location = useLocation();
 
   const { data, isLoading } = useGetProfileQuery();
-   
+
   const { data: searchData } = useGetSearchItemsQuery(searchItems, {
     skip: !searchItems,
   });
 
-  
   const results = searchData?.data || [];
-  
+
   const handleSearch = () => {
     if (!searchItems.trim()) return;
     navigate(`/search?blog=${searchItems}`);
     setSearchItems("");
   };
-  
+
   if (isLoading) return <Loading />;
   return (
     <>
       {/* ================= TOP NAVBAR ================= */}
       <nav className="bg-white shadow-sm sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between gap-4">
-          
           {/* LOGO */}
           <Link to="/" className="flex items-center gap-2">
             <img src={Logo} alt="Logo" className="w-8 h-8 rounded" />
@@ -67,9 +64,7 @@ const Navbar = () => {
                     </Link>
                   ))
                 ) : (
-                  <p className="px-4 py-2 text-sm text-gray-500">
-                    No results found
-                  </p>
+                  <p className="px-4 py-2 text-sm text-gray-500">No results found</p>
                 )}
               </div>
             )}
@@ -82,23 +77,21 @@ const Navbar = () => {
             <Link to="/about">About</Link>
             <Link to="/profile">Profile</Link>
             {/* create blog button */}
-            {
-              data?.data?.user && (
-                <Link to="/create-blog" className="bg-blue-600 text-white px-3 py-1 rounded-lg flex items-center gap-1">
-                  <FiPlus size={16} />
-                  <span>Create Blog</span>
-                </Link>
-              )
-            }
+            {data?.data?.user && (
+              <Link
+                to="/create-blog"
+                className="bg-blue-600 text-white px-3 py-1 rounded-lg flex items-center gap-1"
+              >
+                <FiPlus size={16} />
+                <span>Create Blog</span>
+              </Link>
+            )}
           </div>
 
           {/* RIGHT SIDE */}
           <div className="relative">
             {!data?.data?.user ? (
-              <Link
-                to={"/login"}
-                className="bg-blue-600 text-white px-4 py-2 rounded-lg"
-              >
+              <Link to={"/login"} className="bg-blue-600 text-white px-4 py-2 rounded-lg">
                 Login
               </Link>
             ) : (
@@ -111,15 +104,28 @@ const Navbar = () => {
 
                 {open && (
                   <div className="absolute right-0 mt-3 w-48 bg-white border rounded-xl shadow-lg p-2">
-                    <p className="px-3 py-2 text-sm font-semibold">
-                      {data?.data?.user?.fullName}
-                    </p>
-
-                    <Link to="/dashboard" className="block px-3 py-2 text-sm hover:bg-gray-100 rounded-lg">
+                    <p className="px-3 py-2 text-sm font-semibold">{data?.data?.user?.fullName}</p>
+                    {/* create blog button */}
+                    {data?.data?.user && (
+                      <Link
+                        to="/create-blog"
+                        className="bg-blue-600 text-white px-3 py-1 rounded-lg flex items-center gap-1"
+                      >
+                        <FiPlus size={16} />
+                        <span>Create Blog</span>
+                      </Link>
+                    )}
+                    <Link
+                      to="/dashboard"
+                      className="block px-3 py-2 text-sm hover:bg-gray-100 rounded-lg"
+                    >
                       Dashboard
                     </Link>
 
-                    <Link to={'/profile'} className="w-full text-left px-3 py-2 text-sm hover:bg-gray-100 rounded-lg">
+                    <Link
+                      to={"/profile"}
+                      className="w-full text-left px-3 py-2 text-sm hover:bg-gray-100 rounded-lg"
+                    >
                       My Blogs
                     </Link>
 
