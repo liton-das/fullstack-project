@@ -16,11 +16,12 @@ app.use(cors({
   ],
   credentials: true
 }));
+dbConnection()
+
 app.use(route)
 
 
 app.listen(PORT,(e)=>{
-    dbConnection()
     if(e){
         console.log('Server not connected!',e)
     }
