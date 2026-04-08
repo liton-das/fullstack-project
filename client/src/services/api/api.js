@@ -1,18 +1,18 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
-const baseQuery = fetchBaseQuery({ baseUrl: `https://fullstack-project-cmhy.vercel.app`, credentials: "include" });
+const baseQuery = fetchBaseQuery({ baseUrl: `https://fullstack-project-4cjp.onrender.com`, credentials: "include" });
 const ReAuth = async (arg, api, extraOptions) => {
   let result = await baseQuery(arg, api, extraOptions);
   if (result.error?.status === 401) {
     const refreshResult = await baseQuery(
-      { url: "/auth/v1/refreshAccess-token", method: POST },
+      { url: "/auth/v1/refreshAccess-token", method: "POST" },
       api,
       extraOptions,
     );
     if (refreshResult.data) {
       result = await baseQuery(arg, api, extraOptions);
     } else {
-      await baseQuery({ url: "/auth/v1/logout", method: POST }, arg, api, extraOptions);
+      await baseQuery({ url: "/auth/v1/logout", method: "POST" }, arg, api, extraOptions);
     }
   }
   
