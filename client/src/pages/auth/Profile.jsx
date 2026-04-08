@@ -12,26 +12,26 @@ import moment from "moment";
 import showMsg from "../../utils/getMessage";
 const Profile = () => {
   const { data, isLoading } = useGetProfileQuery();
-  const [limit, setLimit] = useState(3);
-  const { data: getSingleBlogData } = useGetSingleBlogByAuthorIdQuery({ limit, page: 1 });
+  const [page, setPage] = useState(1);
+  const { data: getSingleBlogData } = useGetSingleBlogByAuthorIdQuery({ limit: 3, page });
   const user = data?.data?.user;
-  console.log(user,'user');
+  console.log(getSingleBlogData?.data?.pagination, "blog data");
   const [updateProfile, { isLoading: updating }] = useUpdateProfileMutation();
-  
+
   const [editOpen, setEditOpen] = useState(false);
 
   const [formData, setFormData] = useState({
     fullName: "",
-    phone: ""
+    phone: "",
   });
   const [backendImg, setBackendImg] = useState("");
   const [frontendImg, setFrontendImg] = useState("");
   const ref = useRef();
-    // handle edit open
+  // handle edit open
   const handleEditOpen = () => {
     setFormData({
       fullName: user?.fullName || "",
-      phone: user?.phone || ""
+      phone: user?.phone || "",
     });
     setEditOpen(true);
   };
@@ -46,25 +46,27 @@ const Profile = () => {
 
   // handle update
   const handleUpdate = async (e) => {
-  e.preventDefault();
+    e.preventDefault();
 
-  try {
-    const formField = new FormData();
+    try {
+      const formField = new FormData();
 
-    formField.append("fullName", formData.fullName);
-    formField.append("phone", formData.phone);
-    formField.append("avatar", backendImg);
-    
-    const res = await updateProfile(formField).unwrap();
+      formField.append("fullName", formData.fullName);
+      formField.append("phone", formData.phone);
+      formField.append("avatar", backendImg);
 
-    showMsg.success(res?.data?.message);
+      const res = await updateProfile(formField).unwrap();
 
-    setEditOpen(false);
-  } catch (e) {
-    console.log(e);
-    showMsg.error(e?.data?.message || "Something went wrong");
-  }
-};
+      showMsg.success(res?.data?.message);
+      console.log(res, "update res");
+      setEditOpen(false);
+    } catch (e) {
+      console.log(e);
+      showMsg.error(e?.data?.message || "Something went wrong");
+    }
+  };
+  if(!data?.success) return <Navigate to="/"/>
+  console.log(data, "profile data");
   if (isLoading) return <Loading />;
   return (
     <div className="min-h-screen bg-gray-50 py-10 px-4 md:px-8">
@@ -81,7 +83,10 @@ const Profile = () => {
                 alt="avatar"
                 className="w-28 h-28 rounded-full object-cover border-4 border-blue-100"
               />
-              <button onClick={handleEditOpen} className="absolute bottom-0 right-0 bg-blue-600 text-white p-2 rounded-full shadow">
+              <button
+                onClick={handleEditOpen}
+                className="absolute bottom-0 right-0 bg-blue-600 text-white p-2 rounded-full shadow"
+              >
                 <FiEdit size={14} />
               </button>
             </div>
@@ -135,7 +140,7 @@ const Profile = () => {
         <div className="mt-10">
           <h3 className="text-xl font-semibold mb-4">My Blogs</h3>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-4">
             {/* BLOG CARD */}
             {getSingleBlogData?.data?.data.map((item) => (
               <div
@@ -161,11 +166,50 @@ const Profile = () => {
               </div>
             ))}
           </div>
+          {/* PAGINATION */}
+
+          <div className="flex flex-wrap justify-center sm:justify-end gap-2">
+            {/* Prev */}
+            <button
+              onClick={() => setPage((prev) => prev - 1)}
+              disabled={page === 1}
+              className="px-3 py-1 border rounded-lg text-sm disabled:opacity-50"
+            >
+              Prev
+            </button>
+
+            {/* Pages */}
+            {Array.from({ length: getSingleBlogData?.data?.pagination.totalPages || 1 }, (_, i) => i + 1).map(
+              (p) => (
+                <button
+                  key={p}
+                  onClick={() => setPage(p)}
+                  className={`px-3 py-1 text-sm rounded-lg border ${
+                    page === p ? "bg-blue-600 text-white" : "hover:bg-gray-100"
+                  }`}
+                >
+                  {p}
+                </button>
+              ),
+            )}
+
+            {/* Next */}
+            <button
+              onClick={() => setPage((prev) => prev + 1)}
+              disabled={page === getSingleBlogData?.data?.pagination?.totalPages}
+              className="px-3 py-1 border rounded-lg text-sm disabled:opacity-50"
+            >
+              Next
+            </button>
+          </div>
         </div>
       </div>
       {editOpen && (
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-          <form onSubmit={handleUpdate} className="bg-white w-full max-w-md p-6 rounded-xl shadow-lg">
+          <form
+            onSubmit={handleUpdate}
+            className="bg-white w-full max-w-md p-6 rounded-xl shadow-lg"
+          >
             <h2 className="text-lg font-semibold mb-4">Update Profile</h2>
 
             {/* NAME */}
@@ -191,9 +235,7 @@ const Profile = () => {
             {/* AVATAR */}
             <div className="flex items-center gap-3 mb-4" onClick={() => ref.current.click()}>
               <img
-                src={
-                  frontendImg
-                }
+                src={frontendImg}
                 alt="avatar"
                 className="w-16 h-16 rounded-full object-cover border-4 border-blue-100 cursor-pointer"
               />

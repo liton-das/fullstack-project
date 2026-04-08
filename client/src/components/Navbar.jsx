@@ -3,6 +3,8 @@ import { useGetProfileQuery, useGetSearchItemsQuery } from "../services/api/api"
 import Loading from "./ui/Loading";
 import { Link, useNavigate, useLocation } from "react-router";
 import Logo from "/Logo.png";
+// react icons plus icons
+import { FiSearch ,FiPlus} from "react-icons/fi";
 
 
 const Navbar = () => {
@@ -13,7 +15,7 @@ const Navbar = () => {
   const location = useLocation();
 
   const { data, isLoading } = useGetProfileQuery();
-
+   
   const { data: searchData } = useGetSearchItemsQuery(searchItems, {
     skip: !searchItems,
   });
@@ -74,11 +76,20 @@ const Navbar = () => {
           </div>
 
           {/* MENU */}
-          <div className="hidden md:flex gap-6 text-sm">
+          <div className="hidden md:flex gap-6 text-sm items-center">
             <Link to="/">Home</Link>
             <Link to="/blogs">Blogs</Link>
             <Link to="/about">About</Link>
             <Link to="/profile">Profile</Link>
+            {/* create blog button */}
+            {
+              data?.data?.user && (
+                <Link to="/create-blog" className="bg-blue-600 text-white px-3 py-1 rounded-lg flex items-center gap-1">
+                  <FiPlus size={16} />
+                  <span>Create Blog</span>
+                </Link>
+              )
+            }
           </div>
 
           {/* RIGHT SIDE */}

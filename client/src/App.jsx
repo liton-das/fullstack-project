@@ -29,6 +29,7 @@ const App = () => {
           <Route path='/blog-details/:slug' element={<BlogDetails/>}/>
           <Route path='/blogs' element={<Blogs/>}/>
           <Route path='/about' element={<About/>}/>
+          <Route path='/create-blog' element={<CreateBlog/>}/>
           <Route path='/search/:id' element={<SearchItem/>}/>
         </Route>
         {/* Dashboard route */}
