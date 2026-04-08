@@ -167,9 +167,9 @@ const updateUserProfileController = async(req,res)=>{
     if(!existUser) return responseHeader.error(res,'User not authorized!',401)
     if(existUser.avatar){
       const existImg = existUser.avatar.split('/').pop().split('.')[0]
-      await cloudinary.uploader.destroy(`Blog-image/${existImg}`)
+      await cloudinary.uploader.destroy(`profile/${existImg}`)
     }
-    const image = await uploadImage('Blog-image',bufferImg)
+    const image = await uploadImage('profile',bufferImg)
     if(fullName) existUser.fullName = fullName
     if(phone) existUser.phone = phone
     if(existUser.avatar) existUser.avatar = image

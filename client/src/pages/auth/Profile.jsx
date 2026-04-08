@@ -53,12 +53,8 @@ const Profile = () => {
 
     formField.append("fullName", formData.fullName);
     formField.append("phone", formData.phone);
-
-    // ONLY send image if user selected new one
-    if (backendImg instanceof File) {
-      formField.append("avatar", backendImg);
-    }
-
+    formField.append("avatar", backendImg);
+    
     const res = await updateProfile(formField).unwrap();
 
     showMsg.success(res?.data?.message);

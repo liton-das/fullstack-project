@@ -15,7 +15,7 @@ const DashBoardLayoute = () => {
         <Sidebar/>
       <div className="flex-1 flex flex-col">
           <Navbar/>
-        <main className='overflow-y-auto'>
+        <main className='flex-1 p-4 overflow-y-auto'>
           <Outlet/> 
         </main>
       </div>
