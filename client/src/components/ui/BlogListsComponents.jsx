@@ -4,7 +4,7 @@ import { Link } from "react-router";
 import { FaComment } from "react-icons/fa";
 import showMsg from "../../utils/getMessage";
 import Loading from "./Loading";
-const BlogListsComponents = ({headContent,title,limit=7}) => {
+const BlogListsComponents = ({headContent,title,limit=6}) => {
   const [page, setPage] = useState(1);
   // comment state (store per blogId)
   const [comments, setComments] = useState({});
@@ -14,6 +14,7 @@ const BlogListsComponents = ({headContent,title,limit=7}) => {
     page,
     limit,
   });
+  
   
   const blogs = data?.data?.data || [];
   const [createComment ] = useCreateCommentMutation();
@@ -173,26 +174,40 @@ const BlogListsComponents = ({headContent,title,limit=7}) => {
       {/* PAGINATION */}
       
       
-      <div className="flex justify-center gap-2 pb-10">
-        <button
-          onClick={() => setPage((prev) => prev - 1)}
-          disabled={page === 1}
-          className="px-3 py-1 border rounded-lg disabled:opacity-50"
-        >
-          Prev
-        </button>
+      <div className="flex flex-wrap justify-center sm:justify-center gap-2 mt-4 mb-3">
+            {/* Prev */}
+            <button
+              onClick={() => setPage((prev) => prev - 1)}
+              disabled={page === 1}
+              className="px-3 py-1 border rounded-lg text-sm disabled:opacity-50"
+            >
+              Prev
+            </button>
 
-        <span className="px-3 py-1 bg-blue-600 text-white rounded-lg">
-          {page}
-        </span>
+            {/* Pages */}
+            {Array.from({ length: data?.data?.pagination.totalPages || 1 }, (_, i) => i + 1).map(
+              (p) => (
+                <button
+                  key={p}
+                  onClick={() => setPage(p)}
+                  className={`px-3 py-1 text-sm rounded-lg border ${
+                    page === p ? "bg-blue-600 text-white" : "hover:bg-gray-100"
+                  }`}
+                >
+                  {p}
+                </button>
+              ),
+            )}
 
-        <button
-          onClick={() => setPage((prev) => prev + 1)}
-          className="px-3 py-1 border rounded-lg"
-        >
-          Next
-        </button>
-      </div>
+            {/* Next */}
+            <button
+              onClick={() => setPage((prev) => prev + 1)}
+              disabled={page === data?.data?.pagination?.totalPages}
+              className="px-3 py-1 border rounded-lg text-sm disabled:opacity-50"
+            >
+              Next
+            </button>
+          </div>
     </div>
 
   );

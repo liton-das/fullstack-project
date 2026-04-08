@@ -119,9 +119,9 @@ const Navbar = () => {
                       Dashboard
                     </Link>
 
-                    <button className="w-full text-left px-3 py-2 text-sm hover:bg-gray-100 rounded-lg">
+                    <Link to={'/profile'} className="w-full text-left px-3 py-2 text-sm hover:bg-gray-100 rounded-lg">
                       My Blogs
-                    </button>
+                    </Link>
 
                     <button className="w-full text-left px-3 py-2 text-sm text-red-500 hover:bg-red-50 rounded-lg">
                       Logout

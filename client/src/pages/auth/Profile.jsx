@@ -58,15 +58,12 @@ const Profile = () => {
       const res = await updateProfile(formField).unwrap();
 
       showMsg.success(res?.data?.message);
-      console.log(res, "update res");
       setEditOpen(false);
     } catch (e) {
-      console.log(e);
       showMsg.error(e?.data?.message || "Something went wrong");
     }
   };
   if(!data?.success) return <Navigate to="/"/>
-  console.log(data, "profile data");
   if (isLoading) return <Loading />;
   return (
     <div className="min-h-screen bg-gray-50 py-10 px-4 md:px-8">
