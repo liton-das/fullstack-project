@@ -4,7 +4,7 @@ import Loading from "./ui/Loading";
 import { Link, useNavigate, useLocation } from "react-router";
 import Logo from "/Logo.png";
 // react icons plus icons
-import { FiSearch, FiPlus } from "react-icons/fi";
+import { FiHome, FiFileText, FiInfo, FiUser, FiPlus } from "react-icons/fi";
 
 const Navbar = () => {
   const [open, setOpen] = useState(false);
