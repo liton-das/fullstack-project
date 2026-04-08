@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
-const baseQuery = fetchBaseQuery({ baseUrl: `https://fullstack-project-green.vercel.app/`, credentials: "include" });
+const baseQuery = fetchBaseQuery({ baseUrl: `https://fullstack-project-green.vercel.app`, credentials: "include" });
 const ReAuth = async (arg, api, extraOptions) => {
   let result = await baseQuery(arg, api, extraOptions);
   if (result.error?.status === 401) {
