@@ -30,6 +30,7 @@ export const blogApi = createApi({
         method: "POST",
         body: data,
       }),
+      invalidatesTags: ["Blog"],
     }),
     // verify-otp api
     VerifyOtp: build.mutation({
@@ -38,6 +39,7 @@ export const blogApi = createApi({
         method: "POST",
         body: data,
       }),
+      invalidatesTags: ["Blog"],
     }),
     // resend otp api
     resendOtp: build.mutation({
@@ -46,6 +48,7 @@ export const blogApi = createApi({
         method: "POST",
         body: data,
       }),
+      invalidatesTags: ["Blog"],
     }),
     // login api
     login: build.mutation({
@@ -54,6 +57,7 @@ export const blogApi = createApi({
         method: "POST",
         body: data,
       }),
+      invalidatesTags: ["Blog"],
     }),
     // logout api
     logOut: build.mutation({
