@@ -57,7 +57,7 @@ const Profile = () => {
 
       const res = await updateProfile(formField).unwrap();
 
-      showMsg.success(res?.data?.message);
+      showMsg.success(res?.message);
       setEditOpen(false);
     } catch (e) {
       showMsg.error(e?.data?.message || "Something went wrong");

@@ -30,7 +30,7 @@ const BlogListsComponents = ({headContent,title,limit=6}) => {
         ...prev,
         [blogId] : [...(prev[blogId] || []), text],
       }));
-      showMsg.success(res?.data?.message);
+      showMsg.success(res?.message);
       setCommentInput((prev) => ({ ...prev, [blogId]: "" })); // Clear input
       setIsComment(false) // close comment box after submit
     } catch (e) {

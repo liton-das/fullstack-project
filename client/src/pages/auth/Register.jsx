@@ -26,7 +26,7 @@ const Register = () => {
     e.preventDefault()
     try {
       const res=await register(inputField).unwrap()
-      showMsg.success(res?.data?.message)
+      showMsg.success(res?.message)
       navigate('/verify-otp')
     } catch (e) {
       showMsg.error(e?.data?.message)

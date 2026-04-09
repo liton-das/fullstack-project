@@ -16,7 +16,6 @@ console.log({
 
 // adjust based on backend
 const results = data?.data || [];
-console.log(data?.data[0].title)
   return (
     <div className="bg-gray-50 min-h-screen">
 

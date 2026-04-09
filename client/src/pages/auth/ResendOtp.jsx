@@ -23,7 +23,7 @@ const submitHandler=async(e)=>{
     e.preventDefault()
     try {
         const res = await resendOtp(inputField).unwrap()
-        showMsg.success(res?.data?.message)
+        showMsg.success(res?.message)
     } catch (e) {
         showMsg.error(e?.data?.message)
     }

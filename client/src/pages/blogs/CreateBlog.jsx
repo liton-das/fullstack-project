@@ -61,11 +61,10 @@ const CreateBlog = () => {
       setThumbnail("");
       setInputField(INITIAL_VALUE);
       setSlug("");
-      showMsg.success(res?.data?.message || "Blog created successfully");
+      showMsg.success(res?.message);
       <Navigate to={'/dashboard'}/>
     } catch (e) {
-      console.log(e);
-      showMsg.error(e.data?.message || "Failed to create blog");
+      showMsg.error(e.data?.message);
     }
   };
   if (isLoading) return <Loading />;

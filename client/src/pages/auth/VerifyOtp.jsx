@@ -24,7 +24,7 @@ const VerifyOtp = () => {
     e.preventDefault();
     try {
       const res = await VerifyOtp(inputField).unwrap();
-      showMsg.success(res?.data?.message);
+      showMsg.success(res?.message);
       navigate("/login");
     } catch (e) {
       showMsg.error(e?.data?.message);

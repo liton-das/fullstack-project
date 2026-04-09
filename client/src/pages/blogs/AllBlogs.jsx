@@ -19,11 +19,11 @@ const AllBlogs = () => {
   // handle delete function
   const handleDelete = async (id) => {
     try {
-      await deleteBlog(id).unwrap();
+    const res = await deleteBlog(id).unwrap();
 
-      showMsg.success("Blog deleted successfully");
+      showMsg.success(res?.message);
     } catch (e) {
-      showMsg.error(e?.data?.message || "Failed to delete blog");
+      showMsg.error(e?.data?.message);
     }
   };
   useEffect(() => {
@@ -53,7 +53,6 @@ const handleOpen = (blog) => {
 
  
   if (isLoading) return <Loading />;
-  console.log(data?.data?.data);
   let i = 1;
 
 
