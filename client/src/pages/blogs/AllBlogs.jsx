@@ -20,8 +20,13 @@ const AllBlogs = () => {
   const handleDelete = async (id) => {
     try {
     const res = await deleteBlog(id).unwrap();
-
-      showMsg.success(res?.message);
+      // add sound for delete
+      if(res?.success){
+        const audio = new Audio("/delete-sound.wav");
+        audio.volume = 0.5;
+        audio.play();
+        showMsg.success(res?.message);
+      }
     } catch (e) {
       showMsg.error(e?.data?.message);
     }

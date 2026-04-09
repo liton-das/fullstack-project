@@ -15,52 +15,61 @@ const Profile = () => {
   const [page, setPage] = useState(1);
   const { data: getSingleBlogData } = useGetSingleBlogByAuthorIdQuery({ limit: 3, page });
   const user = data?.data?.user;
-  console.log(getSingleBlogData?.data?.pagination, "blog data");
   const [updateProfile, { isLoading: updating }] = useUpdateProfileMutation();
 
   const [editOpen, setEditOpen] = useState(false);
 
-  const [formData, setFormData] = useState({
+  const [inputfield, setInputfield] = useState({
     fullName: "",
     phone: "",
   });
   const [backendImg, setBackendImg] = useState("");
   const [frontendImg, setFrontendImg] = useState("");
   const ref = useRef();
-  // handle edit open
+  
+
+// handle edit open - set input fields with current data
   const handleEditOpen = () => {
-    setFormData({
-      fullName: user?.fullName || "",
+    setInputfield({
+      fullName: user?.fullName || "", 
       phone: user?.phone || "",
     });
+    setFrontendImg(user?.avatar || "");
     setEditOpen(true);
+  };
+
+  // handle change for input fields
+  const handleChange = (e) => {
+    setInputfield({ ...inputfield, [e.target.name]: e.target.value });
   };
 
   // handle img change
   const handleImgChange = (e) => {
-    const file = e.target.files[0];
-    const imgUrl = URL.createObjectURL(file);
+    const avatar = e.target.files[0];
+    const imgUrl = URL.createObjectURL(avatar);
+    setBackendImg(avatar);
     setFrontendImg(imgUrl);
-    setBackendImg(file);
   };
 
-  // handle update
+  // handle profile update
   const handleUpdate = async (e) => {
     e.preventDefault();
-
+    if (!inputfield.fullName.trim()) {
+      showMsg.error("Full Name is required");
+      return;
+    }
     try {
-      const formField = new FormData();
+      const formData = new FormData();
+      formData.append("fullName", inputfield.fullName);
+      formData.append("phone", inputfield.phone);
+      formData.append("avatar", backendImg);
 
-      formField.append("fullName", formData.fullName);
-      formField.append("phone", formData.phone);
-      formField.append("avatar", backendImg);
-
-      const res = await updateProfile(formField).unwrap();
-
+      const res = await updateProfile(formData).unwrap();
+      console.log("Update response:", res);
       showMsg.success(res?.message);
       setEditOpen(false);
     } catch (e) {
-      showMsg.error(e?.data?.message || "Something went wrong");
+      showMsg.error(e?.data?.message || "Failed to update profile");
     }
   };
   if(!data?.success) return <Navigate to="/"/>
@@ -213,9 +222,9 @@ const Profile = () => {
             <input
               type="text"
               placeholder="Full Name"
-              value={formData.fullName}
+              value={inputfield.fullName}
               name="fullName"
-              onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
+              onChange={handleChange}
               className="w-full mb-3 px-4 py-2 border rounded-lg"
             />
 
@@ -224,8 +233,8 @@ const Profile = () => {
               type="phone"
               placeholder="Phone"
               name="phone"
-              value={formData.phone}
-              onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+              value={inputfield.phone}
+              onChange={handleChange}
               className="w-full mb-3 px-4 py-2 border rounded-lg"
             />
 

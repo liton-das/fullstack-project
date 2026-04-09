@@ -61,7 +61,13 @@ const CreateBlog = () => {
       setThumbnail("");
       setInputField(INITIAL_VALUE);
       setSlug("");
-      showMsg.success(res?.message);
+      // add sound for success
+      if(res?.success){
+        const audio = new Audio("/notify-sound.wav");
+        audio.volume = 0.5;
+        audio.play();
+        showMsg.success(res?.message);
+      }
       <Navigate to={'/dashboard'}/>
     } catch (e) {
       showMsg.error(e.data?.message);

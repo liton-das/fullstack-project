@@ -16,7 +16,6 @@ const BlogListsComponents = ({headContent,title,limit=6}) => {
     limit,
   });
   
-  
   const blogs = data?.data?.data || [];
   const [createComment ] = useCreateCommentMutation();
   
