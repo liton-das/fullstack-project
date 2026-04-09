@@ -153,8 +153,6 @@ const deleteSingleBlogController = async(req,res)=>{
     }
 }
 
-
-
 module.exports = {
     createBlogController,
     getAllBlogsController,
