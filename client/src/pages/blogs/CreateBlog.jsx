@@ -68,7 +68,7 @@ const CreateBlog = () => {
         audio.play();
         showMsg.success(res?.message);
       }
-      <Navigate to={'/dashboard'}/>
+      return <Navigate to={'/dashboard'}/>
     } catch (e) {
       showMsg.error(e.data?.message);
     }

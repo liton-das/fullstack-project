@@ -140,7 +140,7 @@ export const blogApi = createApi({
         url: `/blog/v1/delete-blog/${id}`,
         method: "DELETE",
       }),
-      invalidatesTags: ["Blogs"],
+      invalidatesTags: ["Blog"],
     }),
   }),
 });
