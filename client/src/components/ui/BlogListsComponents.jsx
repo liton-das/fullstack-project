@@ -4,6 +4,7 @@ import { Link } from "react-router";
 import { FaComment } from "react-icons/fa";
 import showMsg from "../../utils/getMessage";
 import Loading from "./Loading";
+import BottomToUpButton from "./BottomToUpButton";
 const BlogListsComponents = ({headContent,title,limit=6}) => {
   const [page, setPage] = useState(1);
   // comment state (store per blogId)
@@ -49,7 +50,7 @@ const BlogListsComponents = ({headContent,title,limit=6}) => {
   if(blogs.length === 0) return <div className="text-center py-10">No blogs found</div>
   return (
     <div className="bg-gray-50 min-h-screen">
-
+      <BottomToUpButton/>
       {/* HERO */}
       <section className="max-w-7xl mx-auto px-6 py-10 text-center">
         <h2 className="text-3xl font-bold">{headContent}</h2>
