@@ -18,6 +18,7 @@ const uploadImage = async (folderName,bufferImg) => {
     
     return uploadResult.secure_url
 };
+
 module.exports = {
     uploadImage
 }

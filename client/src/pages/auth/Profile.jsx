@@ -65,8 +65,14 @@ const Profile = () => {
       formData.append("avatar", backendImg);
 
       const res = await updateProfile(formData).unwrap();
+      if(res?.success){
+        const audio = new Audio("notify-sound.wav");
+        audio.volume = 0.5;
+        audio.play();
+        showMsg.success(res?.message);
+      }
       console.log("Update response:", res);
-      showMsg.success(res?.message);
+      
       setEditOpen(false);
     } catch (e) {
       showMsg.error(e?.data?.message || "Failed to update profile");
