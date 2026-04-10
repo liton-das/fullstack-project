@@ -23,8 +23,8 @@ const Profile = () => {
     fullName: "",
     phone: "",
   });
-  const [backendImg, setBackendImg] = useState("");
-  const [frontendImg, setFrontendImg] = useState("");
+  const [backendImg, setBackendImg] = useState(null);
+  const [frontendImg, setFrontendImg] = useState(null);
   const ref = useRef();
   
 
@@ -71,7 +71,6 @@ const Profile = () => {
         audio.play();
         showMsg.success(res?.message);
       }
-      console.log("Update response:", res);
       
       setEditOpen(false);
     } catch (e) {

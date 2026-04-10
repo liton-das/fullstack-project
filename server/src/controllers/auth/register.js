@@ -104,7 +104,7 @@ const loginController = async (req, res) => {
     const existUser = await User.findOne({ email });
     if (!existUser) return responseHeader.error(res, "This user email not exist!", 404);
     const isMatch = await existUser.verifyPassword(password);
-    if (!isMatch) return responseHeader.error(res, "Password doesn't match ", 400);
+    if (!isMatch) return responseHeader.error(res, "Invalid creadintials! ", 400);
     const accessToken = accessTokenGenerator(existUser._id, existUser.email, existUser.role);
     const refreshToken = refreshTokenGenerator(existUser._id, existUser.email, existUser.role);
     res
@@ -170,9 +170,9 @@ const updateUserProfileController = async(req,res)=>{
       await cloudinary.uploader.destroy(`profile/${existImg}`)
     }
     const image = await uploadImage('profile',bufferImg)
-    if(fullName) existUser.fullName = fullName
-    if(phone) existUser.phone = phone
-    if(existUser.avatar) existUser.avatar = image
+     existUser.fullName = fullName
+     existUser.phone = phone
+     existUser.avatar = image
     await existUser.save()
     return responseHeader.success(res,'User profile updated successfully',200)
   } catch (e) {

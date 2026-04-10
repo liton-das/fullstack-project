@@ -69,7 +69,7 @@ export const blogApi = createApi({
     }),
     // update profile api
     updateProfile: build.mutation({
-      query: ({...data}) => ({
+      query: (data) => ({
         url: "/auth/v1/update-profile",
         method: "PUT",
         body: data,
