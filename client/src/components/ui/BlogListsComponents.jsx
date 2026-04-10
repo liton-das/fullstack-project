@@ -154,7 +154,6 @@ const BlogListsComponents = ({headContent,title,limit=6}) => {
                     {/* COMMENT LIST */}
                     <div className="space-y-1 max-h-24 overflow-y-auto">
                       {(blog.comments || []).map((c, index) => (
-                        console.log(c),
                         <p
                           key={index}
                           className="text-xs bg-gray-100 px-2 py-1 rounded"

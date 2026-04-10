@@ -80,9 +80,7 @@ const AllBlogs = () => {
         showMsg.success(res?.message);
         setIsOpen(false);
       }
-      console.log(res, "updated data");
     } catch (e) {
-      console.log(e, "not updated");
       showMsg.error(e?.data?.message);
     }
   };
