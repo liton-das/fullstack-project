@@ -3,6 +3,7 @@ import { useState } from "react";
 import { FiMenu, FiX } from "react-icons/fi";
 import { useLogOutMutation } from "../services/api/api";
 import Loading from "../components/ui/Loading";
+import showMsg from "../utils/getMessage";
 
 const Sidebar = () => {
   const [logOut, { isLoading }] = useLogOutMutation();
@@ -20,9 +21,11 @@ const Sidebar = () => {
 
   const handleLogout = async () => {
     try {
-      await logOut().unwrap();
+      const res = await logOut().unwrap();
+      window.location.href="https://fullstack-project-green.vercel.app/"
+      showMsg.success(res?.message)
     } catch (e) {
-      console.log(e);
+      showMsg.error(e?.data?.message)
     }
   };
 
@@ -78,9 +81,10 @@ const Sidebar = () => {
 
           <button
             onClick={handleLogout}
+            disabled={isLoading}
             className="p-2 rounded hover:bg-gray-700 text-red-400 text-left"
           >
-            Logout
+            {isLoading ? 'Loging Out....':'Logout'}
           </button>
         </nav>
       </div>
