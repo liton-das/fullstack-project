@@ -2,7 +2,7 @@ import React, { useRef, useState, useEffect } from "react";
 import { FiX, FiImage } from "react-icons/fi";
 import { useUpdateBlogMutation } from "../../services/api/api";
 
-const UpdateUiModal = ({ isOpen, data, setIsOpen }) => {
+const UpdateUiModal = ({ isOpen, data, setIsOpen,handleEditOpen }) => {
   const blog = data;
 
   const [updateBlog, { isLoading }] = useUpdateBlogMutation();
@@ -17,12 +17,10 @@ const UpdateUiModal = ({ isOpen, data, setIsOpen }) => {
     thumbnail: "",
   });
 
-  const [preview, setPreview] = useState("");
-  const [thumbnailImg,setThumbnailImg] = useState("");
-
-
-  // Initialize data
-  useEffect(() => {
+  const [preview, setPreview] = useState(null);
+  const [thumbnailImg,setThumbnailImg] = useState(null);
+// hadle edit open
+const handleEditOpen = (blog) => {
   if (blog) {
     setFormData({
       title: blog.title || "",
@@ -31,10 +29,26 @@ const UpdateUiModal = ({ isOpen, data, setIsOpen }) => {
       isActive: blog.isActive ?? true,
       thumbnail: blog.thumbnail || "",
     });
-
     setPreview(blog.thumbnail || "");
   }
-}, [blog]);
+  setIsOpen(true);
+};
+
+
+//   // Initialize data
+//   useEffect(() => {
+//   if (blog) {
+//     setFormData({
+//       title: blog.title || "",
+//       content: blog.content || "",
+//       tags: blog.tags || "",
+//       isActive: blog.isActive ?? true,
+//       thumbnail: blog.thumbnail || "",
+//     });
+
+//     setPreview(blog.thumbnail || "");
+//   }
+// }, [blog]);
 
   // handle input
   const handleInputChange = (e) => {

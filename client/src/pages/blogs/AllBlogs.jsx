@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router";
 import {
   useDeleteSingleBlogMutation,
@@ -9,19 +9,90 @@ import {
 import Loading from "../../components/ui/Loading";
 import moment from "moment";
 import showMsg from "../../utils/getMessage";
-import UpdateUiModal from "../../dashboard/components/UpdateUiModal";
+import { FiImage, FiX } from "react-icons/fi";
 const AllBlogs = () => {
   const [search, setSearch] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const [deleteBlog, { isLoading: loaded }] = useDeleteSingleBlogMutation();
   const [page, setPage] = useState(1);
   const { data, isLoading } = useGetSingleBlogByAuthorIdQuery({ page, limit: 10 });
+  // update fields state
+  const [inputFields, setInputFields] = useState({
+    title: "",
+    content: "",
+    tags: "",
+    isActive: true,
+    thumbnail: "",
+  });
+  const [updateBlog, { isLoading: updating }] = useUpdateBlogMutation();
+  // open edit modal
+  const [isOpen, setIsOpen] = useState(false);
+  // frontend image preview state
+  const [preview, setPreview] = useState(null);
+  const [thumbnailImg, setThumbnailImg] = useState(null);
+  // setBlogData State
+  const [blogData,setBlogData]=useState(null)
+  const currentImg = useRef();
+  // handle preview image function
+  const handlePreviewImage = (e) => {
+    const file = e.target.files[0];
+    const imgUrl = URL.createObjectURL(file);
+    setPreview(imgUrl);
+    setThumbnailImg(file);
+  };
+  // change input fields
+  const handleInputChange = (e) => {
+    setInputFields({
+      ...inputFields,
+      [e.target.name]:e.target.value
+    });
+  };
+
+  // handle modal open function
+  const handleOpen = (blog) => {
+    setInputFields({
+      title: blog.title || "",
+      content: blog.content || "",
+      tags: blog.tags || "",
+      isActive: blog.isActive ?? true,
+    });
+    setBlogData(blog)
+    setPreview(blog?.thumbnail || "");
+    setIsOpen(true);
+  };
+
+  // handle submit update function
+  const handleSubmitUpdate = async (e) => {
+    e.preventDefault();
+    
+    const formData = new FormData();
+    formData.append("title", inputFields.title);
+    formData.append("content", inputFields.content);
+    formData.append("tags", inputFields.tags);
+    formData.append("isActive", inputFields.isActive);
+    formData.append("thumbnail", thumbnailImg);
+    try {
+      const res = await updateBlog({ id:blogData?._id, data:formData }).unwrap();
+      if (res?.success) {
+        const audio = new Audio("/notify-sound.wav");
+        audio.volume = 0.5;
+        audio.play();
+        showMsg.success(res?.message);
+        setIsOpen(false);
+      }
+      console.log(res, "updated data");
+    } catch (e) {
+      console.log(e, "not updated");
+      showMsg.error(e?.data?.message);
+    }
+  };
+
   // handle delete function
   const handleDelete = async (id) => {
     try {
-    const res = await deleteBlog(id).unwrap();
+      const res = await deleteBlog(id).unwrap();
       // add sound for delete
-      if(res?.success){
+      if (res?.success) {
         const audio = new Audio("/delete-sound.wav");
         audio.volume = 0.5;
         audio.play();
@@ -41,27 +112,9 @@ const AllBlogs = () => {
   const { data: searchTerms } = useGetSearchItemsQuery(debouncedSearch, {
     skip: !debouncedSearch, // don't call API when empty
   });
-
-  // handle modal open function
-  const [isOpen, setIsOpen] = useState(false);
-  // handle open function
-  
-const [selectedBlog, setSelectedBlog] = useState(null);
-
-const handleOpen = (blog) => {
-  setSelectedBlog(blog); // ✅ set clicked blog
-  setIsOpen(true);
-};
-
-
-
-
- 
   if (isLoading) return <Loading />;
+  // for user id
   let i = 1;
-
-
-
   return (
     <div>
       <div className="bg-white p-4 sm:p-6 rounded-2xl shadow space-y-6">
@@ -133,7 +186,10 @@ const handleOpen = (blog) => {
 
               {/* Actions */}
               <div className="flex gap-2 pt-2">
-                <button className="flex-1 bg-blue-500 text-white py-2 rounded-lg text-sm">
+                <button
+                  onClick={() => handleOpen(blog)}
+                  className="flex-1 bg-blue-500 text-white py-2 rounded-lg text-sm"
+                >
                   Edit
                 </button>
 
@@ -209,6 +265,7 @@ const handleOpen = (blog) => {
                       <td className="p-3 text-right space-x-1 sm:space-x-2">
                         <button
                           onClick={() => handleOpen(blog)}
+                          disabled={loaded}
                           className="px-2 sm:px-3 py-1 text-xs sm:text-sm bg-blue-500 text-white rounded-lg hover:bg-blue-600"
                         >
                           Edit
@@ -271,15 +328,93 @@ const handleOpen = (blog) => {
           </div>
         </div>
       </div>
+      {/* Update Modal */}
       {isOpen && (
-        <UpdateUiModal
-          isOpen={isOpen}
-          data={selectedBlog} // ✅ NOT full API response
-          setIsOpen={setIsOpen}
-        />
+        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 p-3 sm:p-4">
+          <form
+            onSubmit={handleSubmitUpdate}
+            className="bg-white w-full max-w-xl rounded-2xl shadow-xl overflow-hidden"
+          >
+            {/* HEADER */}
+            <div className="flex justify-between items-center px-5 py-4 border-b">
+              <h2 className="text-lg font-semibold">Update Blog</h2>
+              <button onClick={() => setIsOpen(false)}>
+                <FiX size={20} />
+              </button>
+            </div>
+
+            {/* BODY */}
+            <div className="p-5 space-y-4 max-h-[70vh] overflow-y-auto">
+              {/* IMAGE */}
+              <div
+                onClick={() => currentImg.current?.click()}
+                className="flex flex-col items-center gap-3"
+              >
+                <div className="w-28 h-28 rounded-xl border overflow-hidden cursor-pointer">
+                  <img src={preview} className="w-full h-full object-cover" />
+                </div>
+
+                <input ref={currentImg} type="file" hidden onChange={handlePreviewImage} />
+
+                <span className="text-sm text-gray-500 flex items-center gap-2">
+                  <FiImage /> Change Image
+                </span>
+              </div>
+
+              {/* FORM */}
+              <div className="space-y-3">
+                <input
+                  name="title"
+                  onChange={handleInputChange}
+                  value={inputFields.title}
+                  placeholder="Title"
+                  className="w-full border px-4 py-2 rounded-lg"
+                />
+
+                <input
+                  name="tags"
+                  onChange={handleInputChange}
+                  value={inputFields.tags}
+                  placeholder="Tags"
+                  className="w-full border px-4 py-2 rounded-lg"
+                />
+
+                <textarea
+                  name="content"
+                  onChange={handleInputChange}
+                  value={inputFields.content}
+                  placeholder="Content"
+                  rows="4"
+                  className="w-full border px-4 py-2 rounded-lg"
+                />
+
+                <select
+                  name="isActive"
+                  onChange={handleInputChange}
+                  value={inputFields.isActive}
+                  className="w-full border px-4 py-2 rounded-lg"
+                >
+                  <option value="true">Published</option>
+                  <option value="false">Draft</option>
+                </select>
+              </div>
+            </div>
+
+            {/* FOOTER */}
+            <div className="flex justify-end gap-3 p-5 border-t">
+              <button onClick={() => setIsOpen(false)} className="px-4 py-2 border rounded-lg">
+                Cancel
+              </button>
+
+              <button type="submit" className="px-4 py-2 bg-blue-600 text-white rounded-lg">
+                {updating ? "Updating..." : "Save Changes"}
+              </button>
+            </div>
+          </form>
+        </div>
       )}
     </div>
   );
-};
+};;
 
 export default AllBlogs;

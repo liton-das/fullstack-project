@@ -47,18 +47,18 @@ const updateBlogController = async(req,res)=>{
         if(!currentUser) return responseHeader.error(res,'Unauthorized user',401)
         const existBlog = await Blogs.findOne({_id:id,author:currentUser})
         if(!existBlog) return responseHeader.error(res,'Blog not exist!',404)
-        const slug = slugGenerator(title)
-        if(title) existBlog.title = title
-        existBlog.slug = slug
-        if(content) existBlog.content = content
-        if(tags) existBlog.tags = tags ? tags.split(',').map((tag)=>tag.trim()) : existBlog.tags
-        
         if(existBlog.thumbnail){
             const existImg = existBlog.thumbnail.split('/').pop().split('.')[0]
             await cloudinary.uploader.destroy(`Blog-image/${existImg}`)
         }
+        const slug = slugGenerator(title)
+        existBlog.title = title
+        existBlog.slug = slug
+        existBlog.content = content
+        existBlog.tags = tags ? tags.split(',').map((tag)=>tag.trim()) : existBlog.tags
+        
         const thumbnailImg = await uploadImage('Blog-image',bufferImg)
-        if(thumbnailImg) existBlog.thumbnail = thumbnailImg
+        existBlog.thumbnail = thumbnailImg
         await existBlog.save()
         return responseHeader.success(res,'Blog updated successfully',200)
     } catch (e) {
