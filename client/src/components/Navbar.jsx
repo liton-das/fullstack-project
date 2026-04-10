@@ -30,64 +30,62 @@ const Navbar = () => {
   if (isLoading) return <Loading />;
   return (
     <>
-    {/* ================= MOBILE BOTTOM NAVBAR ================= */}
-          <div className="fixed bottom-3 left-0 right-0 z-50 flex justify-center md:hidden">
-            <div
-              className="flex items-center gap-8 px-6 py-3 rounded-2xl 
+      {/* ================= MOBILE BOTTOM NAVBAR ================= */}
+      <div className="fixed bottom-3 left-0 right-0 z-50 flex justify-center md:hidden">
+        <div
+          className="flex items-center gap-8 px-6 py-3 rounded-2xl 
                     bg-white/80 backdrop-blur-xl shadow-lg border"
-            >
-              {/* Home */}
-              <Link to="/" className="flex flex-col items-center">
-                <FiHome
-                  className={`text-xl ${location.pathname === "/" ? "text-blue-600" : "text-gray-500"}`}
-                />
-                <span className="text-xs">Home</span>
-              </Link>
-    
-              {/* Blogs */}
-              <Link to="/blogs" className="flex flex-col items-center">
-                <FiFileText
-                  className={`text-xl ${
-                    location.pathname === "/blogs" ? "text-blue-600" : "text-gray-500"
-                  }`}
-                />
-                <span className="text-xs">Blogs</span>
-              </Link>
-    
-              {/* About */}
-              <Link to="/about" className="flex flex-col items-center">
-                <FiInfo
-                  className={`text-xl ${
-                    location.pathname === "/about" ? "text-blue-600" : "text-gray-500"
-                  }`}
-                />
-                <span className="text-xs">About</span>
-              </Link>
-              {/* Create Blog */}
-              {
-                data?.data?.user && (
-                <Link to="/create-blog" className="flex flex-col items-center">
-                  <FiPlus
-                    className={`text-xl ${
-                      location.pathname === "/create-blog" ? "text-blue-600" : "text-gray-500"
-                    }`}
-                  />
-                  <span className="text-xs">Create Blog</span>
-                </Link>
-                )
-              }
-    
-              {/* Profile */}
-              <Link to="/profile" className="flex flex-col items-center">
-                <FiUser
-                  className={`text-xl ${
-                    location.pathname === "/profile" ? "text-blue-600" : "text-gray-500"
-                  }`}
-                />
-                <span className="text-xs">Profile</span>
-              </Link>
-            </div>
-          </div>
+        >
+          {/* Home */}
+          <Link to="/" className="flex flex-col items-center">
+            <FiHome
+              className={`text-xl ${location.pathname === "/" ? "text-blue-600" : "text-gray-500"}`}
+            />
+            <span className="text-xs">Home</span>
+          </Link>
+
+          {/* Blogs */}
+          <Link to="/blogs" className="flex flex-col items-center">
+            <FiFileText
+              className={`text-xl ${
+                location.pathname === "/blogs" ? "text-blue-600" : "text-gray-500"
+              }`}
+            />
+            <span className="text-xs">Blogs</span>
+          </Link>
+
+          {/* About */}
+          <Link to="/about" className="flex flex-col items-center">
+            <FiInfo
+              className={`text-xl ${
+                location.pathname === "/about" ? "text-blue-600" : "text-gray-500"
+              }`}
+            />
+            <span className="text-xs">About</span>
+          </Link>
+          {/* Create Blog */}
+          {data?.data?.user && (
+            <Link to="/create-blog" className="flex flex-col items-center">
+              <FiPlus
+                className={`text-xl ${
+                  location.pathname === "/create-blog" ? "text-blue-600" : "text-gray-500"
+                }`}
+              />
+              <span className="text-xs">Create Blog</span>
+            </Link>
+          )}
+
+          {/* Profile */}
+          <Link to="/profile" className="flex flex-col items-center">
+            <FiUser
+              className={`text-xl ${
+                location.pathname === "/profile" ? "text-blue-600" : "text-gray-500"
+              }`}
+            />
+            <span className="text-xs">Profile</span>
+          </Link>
+        </div>
+      </div>
       {/* ================= TOP NAVBAR ================= */}
       <nav className="bg-white shadow-sm sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between gap-4">
@@ -149,9 +147,14 @@ const Navbar = () => {
           {/* RIGHT SIDE */}
           <div className="relative">
             {!data?.data?.user ? (
-              <Link to={"/login"} className="bg-blue-600 text-white px-4 py-2 rounded-lg">
-                Login
-              </Link>
+              <div className="flex items-center gap-2">
+                <Link to={"/login"} className="bg-blue-600 text-white px-4 py-2 rounded-lg">
+                  Login
+                </Link>
+                <Link to={"/register"} className="bg-blue-600 text-white px-4 py-2 rounded-lg">
+                  Register
+                </Link>
+              </div>
             ) : (
               <div className="relative">
                 <img
