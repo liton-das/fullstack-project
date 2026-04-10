@@ -68,13 +68,17 @@ const CreateBlog = () => {
         audio.play();
         showMsg.success(res?.message);
       }
-      return <Navigate to={'/dashboard'}/>
+      return <Navigate to={'/'}/>;
     } catch (e) {
       showMsg.error(e.data?.message);
     }
   };
   if (isLoading) return <Loading />;
-
+  // validation for blog if user not login then redirect to login page
+  if (data?.message === "Unauthorized") {
+    showMsg.error("Please login to create a blog");
+    return <Navigate to={"/login"} />;
+  }
   return (
     <div>
       <div className="bg-white p-6 rounded-2xl shadow max-w-4xl mx-auto space-y-6">
