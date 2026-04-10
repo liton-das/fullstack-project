@@ -33,7 +33,7 @@ const handleLogOut = async()=>{
     const res = await logOut().unwrap()
     showMsg.success(res?.message)
     if(res?.success){
-      <Navigate to={'/login'}/>
+      <Navigate to={'/'}/>
     }
     setOpen(false)
   } catch (e) {
