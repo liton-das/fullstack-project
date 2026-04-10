@@ -32,9 +32,8 @@ const handleLogOut = async()=>{
   try {
     const res = await logOut().unwrap()
     showMsg.success(res?.message)
-    if(res?.success){
-      <Navigate to={'/'}/>
-    }
+    // Redirect user
+    window.location.href = "/";
     setOpen(false)
   } catch (e) {
     showMsg.error(res?.data?.message)
@@ -204,8 +203,8 @@ const handleLogOut = async()=>{
                       My Blogs
                     </Link>
 
-                    <button onClick={handleLogOut} className="w-full text-left px-3 py-2 text-sm text-red-500 hover:bg-red-50 rounded-lg">
-                      {logout?'Logout...':'Logout'}
+                    <button onClick={handleLogOut} disabled={logout} className="w-full text-left px-3 py-2 text-sm text-red-500 hover:bg-red-50 rounded-lg">
+                      {logout?'loging out...':'Logout'}
                     </button>
                   </div>
                 )}
