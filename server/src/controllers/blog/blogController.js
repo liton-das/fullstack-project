@@ -53,10 +53,16 @@ const updateBlogController = async(req,res)=>{
             await cloudinary.uploader.destroy(`Blog-image/${existImg}`)
         }
         const thumbnailImg = await uploadImage('Blog-image',bufferImg)
-        existBlog.title = title
-        existBlog.slug = slug
-        existBlog.content = content
-        existBlog.tags = tags ? tags.split(',').map((tag)=>tag.trim()) : existBlog.tags
+        if(title){
+            existBlog.title = title
+            existBlog.slug = slug
+        }
+        if(content){
+            existBlog.content = content
+        }
+        if(tags){
+            existBlog.tags = tags ? tags.split(',').map((tag)=>tag.trim()) : existBlog.tags
+        }
         existBlog.thumbnail = thumbnailImg
         await existBlog.save()
         return responseHeader.success(res,'Blog updated successfully',200)

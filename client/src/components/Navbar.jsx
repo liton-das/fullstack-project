@@ -1,15 +1,16 @@
 import React, { useState } from "react";
-import { useGetProfileQuery, useGetSearchItemsQuery } from "../services/api/api";
+import { useGetProfileQuery, useGetSearchItemsQuery, useLogOutMutation } from "../services/api/api";
 import Loading from "./ui/Loading";
-import { Link, useNavigate, useLocation } from "react-router";
+import { Link, useNavigate, useLocation, Navigate } from "react-router";
 import Logo from "/Logo.png";
 // react icons plus icons
 import { FiHome, FiFileText, FiInfo, FiUser, FiPlus } from "react-icons/fi";
+import showMsg from "../utils/getMessage";
 
 const Navbar = () => {
   const [open, setOpen] = useState(false);
   const [searchItems, setSearchItems] = useState("");
-
+  const [logOut,{isLoading:logout}] = useLogOutMutation()
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -26,6 +27,19 @@ const Navbar = () => {
     navigate(`/search?blog=${searchItems}`);
     setSearchItems("");
   };
+// handle logOut funciton 
+const handleLogOut = async()=>{
+  try {
+    const res = await logOut().unwrap()
+    showMsg.success(res?.message)
+    if(res?.success){
+      <Navigate to={'/login'}/>
+    }
+    setOpen(false)
+  } catch (e) {
+    showMsg.error(res?.data?.message)
+  }
+}
 
   if (isLoading) return <Loading />;
   return (
@@ -190,8 +204,8 @@ const Navbar = () => {
                       My Blogs
                     </Link>
 
-                    <button className="w-full text-left px-3 py-2 text-sm text-red-500 hover:bg-red-50 rounded-lg">
-                      Logout
+                    <button onClick={handleLogOut} className="w-full text-left px-3 py-2 text-sm text-red-500 hover:bg-red-50 rounded-lg">
+                      {logout?'Logout...':'Logout'}
                     </button>
                   </div>
                 )}
