@@ -19,6 +19,7 @@ import Blogs from './pages/public/Blogs'
 import About from './pages/public/About'
 import SearchItem from './pages/SearchItem'
 import Profile from './pages/auth/Profile'
+
 const App = () => {
   const router = createBrowserRouter(createRoutesFromElements(
     <Route>

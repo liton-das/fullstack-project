@@ -4,6 +4,7 @@ const { uploadImage } = require("../../utility/cloudinary")
 const slugGenerator = require("../../utility/slugGenerator")
 const { responseHeader } = require("../../utility/utiliti")
 const cloudinary = require('cloudinary').v2
+
 // create blog controller 
 const createBlogController = async(req,res)=>{
     const {title,content,tags} = req.body
@@ -78,6 +79,7 @@ const getAllBlogsController = async(req,res)=>{
     const skip = (page - 1) * limit
     const totalCount = await Blogs.countDocuments()
     const totalUsers = await User.countDocuments()
+    
     try {
         const allBlogs = await Blogs.find().sort({createdAt:-1}).limit(limit).skip(skip).populate('author comments','fullName role comment_body')
         const simplify = {

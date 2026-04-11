@@ -32,8 +32,6 @@ const handleLogOut = async()=>{
   try {
     const res = await logOut().unwrap()
     showMsg.success(res?.message)
-    // Redirect user
-    window.location.href = "/";
     setOpen(false)
   } catch (e) {
     showMsg.error(res?.data?.message)
