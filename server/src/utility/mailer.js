@@ -7,7 +7,7 @@ const transporter = nodemailer.createTransport({
   secure: false, // use STARTTLS (upgrade connection to TLS after connecting)
   auth: {
     user: 'suyadas01331215169@gmail.com',
-    pass: 'mezo mtsd qiqi ltpe',
+    pass: 'fqey yxxg opez xkzz',
   },
 });
 
@@ -15,7 +15,7 @@ const transporter = nodemailer.createTransport({
 const sendMailToUser= async(to,subject,mailTemplate,user,otp,otpExpire) => {
   try {
     await transporter.sendMail({
-      from: '"Example Team" <suyadas01331215169@gmail.com>', // sender address
+      from: '"BlogForge" <suyadas01331215169@gmail.com>', // sender address
       to: to, // list of recipients
       subject: subject, // subject line
       html: mailTemplate(user,otp,otpExpire), // HTML body
