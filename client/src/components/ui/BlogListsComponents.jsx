@@ -40,7 +40,7 @@ const BlogListsComponents = ({headContent,title,limit=6}) => {
       setCommentInput((prev) => ({ ...prev, [blogId]: "" })); // Clear input
       setIsComment(false) // close comment box after submit
     } catch (e) {
-        alert('Please login first!')
+      alert('Please login first!')
       showMsg.error(e?.data?.message);
     }
   };
