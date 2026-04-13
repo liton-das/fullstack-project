@@ -15,9 +15,9 @@ app.use(cors({
   ],
   credentials: true
 }));
-app.use(route)
 dbConnection()
 
+app.use(route)
 
 app.listen(PORT,(e)=>{
     if(e){
