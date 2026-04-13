@@ -37,6 +37,9 @@ const BlogListsComponents = ({headContent,title,limit=6}) => {
         audio.play();
         showMsg.success(res?.message);
       }
+      if(!res?.success){
+        alert('Please login first!')
+      }
       setCommentInput((prev) => ({ ...prev, [blogId]: "" })); // Clear input
       setIsComment(false) // close comment box after submit
     } catch (e) {
