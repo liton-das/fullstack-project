@@ -4,12 +4,14 @@ import Button from '../../components/ui/Button'
 import { useResendOtpMutation } from '../../services/api/api'
 import Loading from '../../components/ui/Loading'
 import showMsg from '../../utils/getMessage'
+import { useNavigate } from 'react-router'
 const INITIAL_VALUE ={
     email:''
 }
 const ResendOtp = () => {
 const [inputField,setInputField]=useState({...INITIAL_VALUE})
 const [resendOtp,{isError,isLoading}]=useResendOtpMutation()
+const navigate = useNavigate()
 if(isLoading) return <Loading/>
 // changeHandler 
 const changehandler=(e)=>{
@@ -24,6 +26,7 @@ const submitHandler=async(e)=>{
     try {
         const res = await resendOtp(inputField).unwrap()
         showMsg.success(res?.message)
+        navigate('/verify-otp')
     } catch (e) {
         showMsg.error(e?.data?.message)
     }
